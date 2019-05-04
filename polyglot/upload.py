@@ -1,4 +1,5 @@
 import bitsv
+from bitsv import crypto
 
 # [BITCOM PREFIXES]
 B = '19HxigV4QyBv3tHpQVcUEQyq1pzZVdoAut'  # https://b.bitdb.network/
@@ -101,5 +102,40 @@ class Upload(bitsv.PrivateKey):
 
     @staticmethod
     def calculate_txid(rawtx):
-        rawtx = bitsv.crypto.double_sha256(bitsv.utils.hex_to_bytes(rawtx))[::-1]
+        rawtx = crypto.double_sha256(bitsv.utils.hex_to_bytes(rawtx))[::-1]
         return rawtx.hex()
+
+    # B
+    def b_create_rawtx_from_binary(self, binary, media_type, encoding=' ', file_name=' '):
+        """Creates rawtx for sending data (<100kb) to the blockchain via the B:// protocol
+        see: https://github.com/unwriter/B or https://b.bitdb.network/ for details"""
+
+        hex_data = binary.hex()
+        lst_of_pushdata = [(B, "utf-8"),  # B:// protocol prefix
+                           (hex_data, 'hex'),
+                           (media_type, "utf-8"),
+                           (encoding, "utf-8"),  # Optional if no filename
+                           (file_name, "utf-8")]  # Optional
+
+        return self.create_op_return_rawtx(lst_of_pushdata)
+
+    def b_create_rawtx_from_file(self, file, media_type, encoding=' ', file_name=' '):
+        # FIXME - add checks for file extension type --> enforce correct parameters for protocol
+        binary = self.file_to_binary(file)
+        return self.b_create_rawtx_from_binary(binary, media_type, encoding=encoding, file_name=file_name)
+
+    def b_create_rawtx_from_file_ezmode(self, file):
+        """This function predicts the media_type, encoding and b:// filename from 'file' name and extension"""
+        media_type = self.get_media_type_for_file_name(file)
+        encoding = self.get_encoding_for_file_name(file)
+        file_name = self.get_filename(file)
+        binary = self.file_to_binary(file)
+        return self.b_create_rawtx_from_binary(binary, media_type, encoding=encoding, file_name=file_name)
+
+    def b_send_from_binary(self, binary, media_type, encoding=' ', file_name=' '):
+        rawtx = self.b_create_rawtx_from_binary(binary, media_type, encoding=encoding, file_name=file_name)
+        return self.send_rawtx(rawtx)
+
+    def b_send_from_file(self, file, media_type, encoding=' ', file_name=' '):
+        rawtx = self.b_create_rawtx_from_file(file, media_type, encoding=encoding, file_name=file_name)
+        return self.send_rawtx(rawtx)
