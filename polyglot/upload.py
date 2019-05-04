@@ -54,4 +54,52 @@ class Upload(bitsv.PrivateKey):
         with open(file, 'rb') as f:
             return f.read()
 
+    @staticmethod
+    def binary_to_hex(binary):
+        # FIXME - may not just work for any file
+        return binary.hex()
 
+    @staticmethod
+    def get_filename(path):
+        if "\\" in path:
+            lst = path.split(os.sep)
+            return lst[len(lst)-1]
+        else:
+            lst = path.split("/")
+            return lst[len(lst)-1]
+
+    @staticmethod
+    def get_file_ext(file):
+        ext = file.split(r".")[1].strip(r"'")
+        return ext
+
+    @staticmethod
+    def get_media_type_for_extension(ext):
+        return MEDIA_TYPE[str(ext)]
+
+    @staticmethod
+    def get_encoding_type_for_extension(ext):
+        return ENCODINGS[str(ext)]
+
+    def get_media_type_for_file_name(self, file):
+        return self.get_media_type_for_extension(self.get_file_ext(file))
+
+    def get_encoding_for_file_name(self, file):
+        return self.get_encoding_type_for_extension(self.get_file_ext(file))
+
+    @staticmethod
+    def send_rawtx(rawtx):
+        return bitsv.network.services.BitIndex.broadcast_rawtx(rawtx)
+
+    @staticmethod
+    def send_lst_of_rawtxs(lst_of_tx):
+        """Takes in list of rawtxs - returns txids of sent transactions if successful"""
+        txs = []
+        for tx in lst_of_tx:
+            txs.append(bitsv.network.services.BitIndex.broadcast_rawtx(tx))
+        return txs
+
+    @staticmethod
+    def calculate_txid(rawtx):
+        rawtx = bitsv.crypto.double_sha256(bitsv.utils.hex_to_bytes(rawtx))[::-1]
+        return rawtx.hex()
