@@ -1,0 +1,22 @@
+dist: xenial  # required for Python >= 3.7
+language: python
+
+matrix:
+    include:
+        - python: 3.6
+          env: TOXENV=py36
+        - python: 3.7
+          env: TOXENV=py37
+
+install:
+  - pip install -U setuptools pip
+  - pip install tox
+  - pip install codecov
+  - pip install sphinx
+
+script: "tox -- -rs"
+
+after_success:
+  - codecov
+  - chmod a+x ./.travis/deploy_docs.sh
+  - ./.travis/deploy_docs.sh
