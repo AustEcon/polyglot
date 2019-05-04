@@ -1,5 +1,6 @@
 Polyglot: Bitcoin protocols made easy
 =====================================
+Documentation: https://austecon.github.io/polyglot/
 Powered by BitSV: https://github.com/AustEcon/bitsv
 
 Polyglot Mission
