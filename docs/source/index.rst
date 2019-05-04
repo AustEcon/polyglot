@@ -1,11 +1,12 @@
-Polyglot: Bitcoin protocols made easy
-=====================================
+Polyglot: Bitcoin protocols made easy.
+======================================
+
 Powered by BitSV: https://github.com/AustEcon/bitsv
 
 Polyglot Mission
 ----------------
 
-Is to lower barriers to entry for novice programmers and make metanet FUN!
+Lower barriers to entry for novice programmers and make metanet FUN!
 
 * So why python and why polyglot?
 
@@ -16,7 +17,7 @@ Is to lower barriers to entry for novice programmers and make metanet FUN!
     - I want to make the process so easy that it is basically three lines of code... and you spend the rest of your time learning html, css (which can be mostly learned in one or two weekends) and then adding in some js.
     - Give the path to your files and simply upload to metanet! DONE!
 
-* Is it just going to be for uploading files?
+* Is it just for uploading files?
 
     - No I have much bigger plans for this.
     - This library is designed to be the easiest way for pythonistas to interface with all of the various, growing bitcoin metanet protocols.
@@ -48,15 +49,6 @@ Is to lower barriers to entry for novice programmers and make metanet FUN!
 * A PyQt5 GUI will accompany this library to lower barriers to entry even further to non-technical folk https://github.com/AustEcon/polyglotGUI
 
 
-# TODO - badges...
-
-
-What needs fixing
------------------
-
-- This README and many other things...
-
-----------------------------
 
 Examples
 --------
@@ -71,9 +63,9 @@ Features (Planned)
 - BCAT:// (for multimedia up to 310mb uncompressed, 110GB with nested gzip) - https://bcat.bico.media/
 - Bottle (https://bottle.bitdb.network/) (native metanet) refs and mainstream urls for:
 
-	- B:// (ref. by txid)
-	- C:// (ref. by sha256 hash of content)
-	- D:// (ref. by dynamic state - linked to identity system)
+    - B:// (ref. by txid)
+    - C:// (ref. by sha256 hash of content)
+    - D:// (ref. by dynamic state - linked to identity system)
 - AIP (https://github.com/BitcoinFiles/AUTHOR_IDENTITY_PROTOCOL)
 - other ID protocols (e.g. Ryan X. Charles of Money Button has been working hard on this area)
 - MAP protocol for linking all kinds of different protocols together (powerful)
@@ -93,6 +85,17 @@ Documentation
 -------------
 Docs are hosted by Github Pages and are automatically built and published by Travis after every successful commit to Polyglot's master branch.
 
+User Guide
+----------
+
+This section will tell you a little about the project, show how to install it,
+and will then walk you through how to use BitSV with many examples and explanations
+of best practices.
+
+.. toctree::
+    :maxdepth: 2
+
+    guide/intro
 
 Credits
 -------
