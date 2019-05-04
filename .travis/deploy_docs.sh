@@ -4,13 +4,13 @@
 
 set -o errexit -o nounset
 
-if [ "$TRAVIS_REPO_SLUG" != "AustEcon/bitsv" ] || [ "$TRAVIS_PULL_REQUEST" != "false" ] || [ "$TRAVIS_BRANCH" != "master" ]
+if [ "$TRAVIS_REPO_SLUG" != "AustEcon/polyglot" ] || [ "$TRAVIS_PULL_REQUEST" != "false" ] || [ "$TRAVIS_BRANCH" != "master" ]
 then
   echo "This commit was made against the $TRAVIS_BRANCH and not the master! No deploy!"
   exit 0
 fi
 
-if [ "$TRAVIS_PYTHON_VERSION" != "3.6" ]
+if [ "$TRAVIS_PYTHON_VERSION" != "3.7" ]
 then
   echo "This is not the designated environment to publish docs. Skipping docs publishing."
   exit 0
