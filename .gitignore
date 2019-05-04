@@ -1,0 +1,14 @@
+*.log
+*.pyc
+*.orig
+__pycache__
+/.cache
+/.idea
+/polyglot/.idea
+/.coverage
+/.pytest_cache
+/polyglot.egg-info
+/build
+/dist
+/docs/build
+/wheelhouse
