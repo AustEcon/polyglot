@@ -1,5 +1,9 @@
+import os
+from io import BytesIO
+
 import bitsv
 from bitsv import crypto
+from bitsv import utils
 
 # [BITCOM PREFIXES]
 B = '19HxigV4QyBv3tHpQVcUEQyq1pzZVdoAut'  # https://b.bitdb.network/
@@ -116,7 +120,6 @@ class Upload(bitsv.PrivateKey):
                            (media_type, "utf-8"),
                            (encoding, "utf-8"),  # Optional if no filename
                            (file_name, "utf-8")]  # Optional
-
         return self.create_op_return_rawtx(lst_of_pushdata)
 
     def b_create_rawtx_from_file(self, file, media_type, encoding=' ', file_name=' '):
@@ -138,4 +141,74 @@ class Upload(bitsv.PrivateKey):
 
     def b_send_from_file(self, file, media_type, encoding=' ', file_name=' '):
         rawtx = self.b_create_rawtx_from_file(file, media_type, encoding=encoding, file_name=file_name)
+        return self.send_rawtx(rawtx)
+
+    # BCAT
+    def bcat_parts_create_from_binary(self, binary):
+        """Takes in binary data for upload - returns list of rawtx"""
+        # Get full binary
+        stream = BytesIO(binary)
+
+        # FIXME I have just subtracted 10000 bytes instead of going through the logic of making everything perfectly
+        #  end up with a finalised rawtx of exactly <= 100kb every time (Must include bytes taken up by UTXOs that
+        #  will be used to cover the fees - which also needs to be calculated upfront based on what the transaction
+        #  sizes will be - which depends on UTXOs you end up with a simultaneous equations problem - I'll fix it later.
+
+        # Available space per tx = 100kb - BCATPART - "safety margin of 10,000 bytes for utxos etc"
+        space_available_per_tx = 100000 - len(BCATPART.encode('utf-8')) - 10000  # temporary hack (-) 10,000 bytes
+
+        txs = []  # to store hashes
+
+        num_of_tx_required = (len(binary) // space_available_per_tx) + 1
+        for _ in range(num_of_tx_required):
+            lst_of_pushdata = [(BCATPART, 'utf-8'),
+                               (stream.read(space_available_per_tx).hex(), 'hex')]
+            txs.append(self.create_op_return_rawtx(lst_of_pushdata))
+        return txs
+
+    def bcat_parts_create_from_file(self, file):
+        # FIXME - check if this will work for plain text / html etc.
+        with open(file, 'rb') as f:
+            binary = f.read()
+        return self.bcat_parts_create_from_binary(binary)
+
+    def bcat_parts_send_from_binary(self, binary):
+        """returns txids of sent transactions if successful"""
+        lst_of_tx = self.bcat_parts_create_from_binary(binary)
+        return self.send_lst_of_rawtxs(lst_of_tx)
+
+    def bcat_parts_send_from_file(self, file):
+        """returns txids of sent transactions if successful"""
+        # Get full binary
+        with open(file, 'rb') as f:
+            binary = f.read()
+        binary = Upload.file_to_binary(binary)
+        lst_of_tx = self.bcat_parts_create_from_binary(binary)
+        return self.send_lst_of_rawtxs(lst_of_tx)
+
+    def bcat_linker_create_from_txids(self, lst_of_txids, media_type, encoding, file_name, info=' ', flags=' '):
+        """Creates bcat transaction to link up "bcat parts" (with the stored data).
+        This BCAT:// protocol allows for concatenating data > 100kb (up to 310MB uncompressed) to the blockchain.
+        see: https://bcat.bico.media/
+
+        returns rawtx"""
+
+        # FIXME - add checks
+        lst_of_pushdata = [(BCAT, 'utf-8'),
+                           (info, "utf-8"),  # B:// protocol prefix
+                           (media_type, 'utf-8'),
+                           (encoding, "utf-8"),
+                           (file_name, "utf-8"),  # Optional if no filename
+                           (flags, "utf-8")]  # Optional
+
+        lst_of_pushdata.extend([(tx, 'hex') for tx in lst_of_txids])
+        return self.create_op_return_rawtx(lst_of_pushdata)
+
+    def bcat_linker_send_from_txids(self, lst_of_txids, media_type, encoding, file_name=' ', info=' ', flags=' '):
+        """Creates and sends bcat transaction to link up "bcat parts" (with the stored data).
+        This BCAT:// protocol allows for concatenating data > 100kb (up to 310MB uncompressed) to the blockchain.
+        see: https://bcat.bico.media/"""
+
+        rawtx = self.bcat_linker_create_from_txids(lst_of_txids, media_type, encoding, file_name, info=info,
+                                                   flags=flags)
         return self.send_rawtx(rawtx)
