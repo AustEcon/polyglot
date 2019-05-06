@@ -167,7 +167,7 @@ class Upload(bitsv.PrivateKey):
                            (encoding, "utf-8"),  # Optional if no filename
                            (file_name, "utf-8")]  # Optional
         lst_of_pushdata = op_return.create_pushdata(lst_of_pushdata)
-        return self.create_transaction(outputs=[], message=lst_of_pushdata, combine=False, custom_pushdata=False, unspents=self.filter_utxos_for_bcat())
+        return self.create_transaction(outputs=[], message=lst_of_pushdata, combine=False, custom_pushdata=True, unspents=self.filter_utxos_for_bcat())
 
     def b_create_rawtx_from_file(self, file, media_type, encoding=' ', file_name=' '):
         # FIXME - add checks for file extension type --> enforce correct parameters for protocol
@@ -253,7 +253,7 @@ class Upload(bitsv.PrivateKey):
 
         lst_of_pushdata.extend([(tx, 'hex') for tx in lst_of_txids])
         lst_of_pushdata = op_return.create_pushdata(lst_of_pushdata)
-        return self.create_transaction(outputs=[], message=lst_of_pushdata, combine=False, custom_pushdata=False, unspents=self.filter_utxos_for_bcat())
+        return self.create_transaction(outputs=[], message=lst_of_pushdata, combine=False, custom_pushdata=True, unspents=self.filter_utxos_for_bcat())
 
     def bcat_linker_send_from_txids(self, lst_of_txids, media_type, encoding, file_name=' ', info=' ', flags=' '):
         """Creates and sends bcat transaction to link up "bcat parts" (with the stored data).
