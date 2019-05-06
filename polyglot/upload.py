@@ -2,6 +2,7 @@ import os
 from io import BytesIO
 
 import bitsv
+from bitsv import op_return
 from bitsv import crypto
 from bitsv import utils
 
@@ -165,7 +166,8 @@ class Upload(bitsv.PrivateKey):
                            (media_type, "utf-8"),
                            (encoding, "utf-8"),  # Optional if no filename
                            (file_name, "utf-8")]  # Optional
-        return self.create_transaction(outputs=[], message=lst_of_pushdata, combine=False, custom_pushdata=False)
+        lst_of_pushdata = op_return.create_pushdata(lst_of_pushdata)
+        return self.create_transaction(outputs=[], message=lst_of_pushdata, combine=False, custom_pushdata=False, unspents=self.filter_utxos_for_bcat())
 
     def b_create_rawtx_from_file(self, file, media_type, encoding=' ', file_name=' '):
         # FIXME - add checks for file extension type --> enforce correct parameters for protocol
@@ -215,7 +217,8 @@ class Upload(bitsv.PrivateKey):
             # with >= 1 conf the series of txs will start to fail as bitsv will start drawing from the pool of utxos
             # with 0 conf (and probably close to 100kb tx size --> which I suspect breaches another (less known) network
             # rule about the total *SIZE* of a chain of txs between blocks (i.e. not only a "speed limit" of 25 tx between blocks
-            txid = self.send(outputs=[], message=lst_of_pushdata, fee=1, combine=False, custom_pushdata=True)
+            lst_of_pushdata = op_return.create_pushdata(lst_of_pushdata)
+            txid = self.send(outputs=[], message=lst_of_pushdata, fee=1, combine=False, custom_pushdata=True, unspents=self.filter_utxos_for_bcat())
 
             txs.append(txid)
             # FIXME - Currently using a hack of 5 second sleep to give time for BitIndex to update my correct UTXOs
@@ -247,7 +250,9 @@ class Upload(bitsv.PrivateKey):
                            (flags, "utf-8")]  # Optional
 
         lst_of_pushdata.extend([(tx, 'hex') for tx in lst_of_txids])
-        return self.create_transaction(outputs=[], message=lst_of_pushdata, combine=False, custom_pushdata=False)
+        lst_of_pushdata = op_return.create_pushdata(lst_of_pushdata)
+        self.get_unspents()
+        return self.create_transaction(outputs=[], message=lst_of_pushdata, combine=False, custom_pushdata=False, unspents=self.filter_utxos_for_bcat())
 
     def bcat_linker_send_from_txids(self, lst_of_txids, media_type, encoding, file_name=' ', info=' ', flags=' '):
         """Creates and sends bcat transaction to link up "bcat parts" (with the stored data).
