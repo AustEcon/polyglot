@@ -1,6 +1,6 @@
 import os
 from io import BytesIO
-
+import time
 import bitsv
 from bitsv import op_return
 from bitsv import crypto
@@ -218,6 +218,8 @@ class Upload(bitsv.PrivateKey):
             # with 0 conf (and probably close to 100kb tx size --> which I suspect breaches another (less known) network
             # rule about the total *SIZE* of a chain of txs between blocks (i.e. not only a "speed limit" of 25 tx between blocks
             lst_of_pushdata = op_return.create_pushdata(lst_of_pushdata)
+            # FIXME to avoid having to wait for API to update unspents - need to add a local function to remove these recently used utxos
+            time.sleep(2)
             txid = self.send(outputs=[], message=lst_of_pushdata, fee=1, combine=False, custom_pushdata=True, unspents=self.filter_utxos_for_bcat())
 
             txs.append(txid)
@@ -251,7 +253,6 @@ class Upload(bitsv.PrivateKey):
 
         lst_of_pushdata.extend([(tx, 'hex') for tx in lst_of_txids])
         lst_of_pushdata = op_return.create_pushdata(lst_of_pushdata)
-        self.get_unspents()
         return self.create_transaction(outputs=[], message=lst_of_pushdata, combine=False, custom_pushdata=False, unspents=self.filter_utxos_for_bcat())
 
     def bcat_linker_send_from_txids(self, lst_of_txids, media_type, encoding, file_name=' ', info=' ', flags=' '):
@@ -262,3 +263,13 @@ class Upload(bitsv.PrivateKey):
         rawtx = self.bcat_linker_create_from_txids(lst_of_txids, media_type, encoding, file_name, info=info,
                                                    flags=flags)
         return self.send_rawtx(rawtx)
+
+    def upload_bcat(self, file):
+        """broadcasts bcat parts and then bcat linker tx. Returns txid of linker."""
+        txids = self.bcat_parts_send_from_file(file)
+        time.sleep(2)
+        txid = self.bcat_linker_send_from_txids(lst_of_txids=txids,
+                                                media_type=self.get_media_type_for_file_name(file),
+                                                file_name=file,
+                                                encoding=self.get_encoding_for_file_name(file))
+        return txid
