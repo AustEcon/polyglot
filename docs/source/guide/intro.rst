@@ -69,28 +69,23 @@ Features (Planned)
 Installation
 ------------
 
-Polyglot is distributed on `PyPI` as a universal wheel and is available on Linux/macOS
+Polyglot *will be* distributed on `PyPI` as a universal wheel and is available on Linux/macOS
 and Windows and supports Python 3.5+. ``pip`` >= 8.1.2 is required.
 
 .. code-block:: bash
 
     $ pip install polyglot # pip3 if pip is Python 2 on your system.
 
-Documentation
--------------
-Docs are hosted by Github Pages and are automatically built and published by Travis after every successful commit to Polyglot's master branch.
+In the meantime - you can simply clone the repository and run:
 
-User Guide
-----------
+.. code-block:: bash
 
-This section will tell you a little about the project, show how to install it,
-and will then walk you through how to use BitSV with many examples and explanations
-of best practices.
+    $ python setup.py install
 
-.. toctree::
-    :maxdepth: 2
+License
+-------
 
-    guide/intro
+Polyglot is licensed under terms of the `MIT License`_.
 
 Credits
 -------
@@ -99,3 +94,5 @@ Credits
 Donate
 --------
 - Made by $AustEcon (Handcash handle)
+
+.. _MIT License: https://en.wikipedia.org/wiki/MIT_License
