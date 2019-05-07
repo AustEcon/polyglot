@@ -42,6 +42,7 @@ the **bitsv.PrivateKey** class such as checking balance, unspends, sending payme
     >>> file_name = uploader.get_filename(file)
     >>>
     >>> uploader.b_send_from_file(file, media_type, encoding, file_name=file_name)
+    '252ea6d5a4a4bfc956518403f6e5aa2ced1c2590d1120cd75341e0233d1b06e3'
 
 See image here: https://bico.media/252ea6d5a4a4bfc956518403f6e5aa2ced1c2590d1120cd75341e0233d1b06e3
 
@@ -69,6 +70,7 @@ In the next release, this will be done simply with:
                     encoding=uploader.get_encoding_for_file_name(file),
                     file_name=file
                     )
+    'be8b6a79e66934d3419265fbf3295d03e331a4c08098ae7f817a7592ffaedd2b'
 
 See image here: https://bico.media/be8b6a79e66934d3419265fbf3295d03e331a4c08098ae7f817a7592ffaedd2b
 
