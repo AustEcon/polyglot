@@ -24,8 +24,8 @@ This library is heavily inspired by ofek's library `bit <https://github.com/ofek
 
 **Here are some examples:**
 
-Polyglot extends bitsv with the :class:`~polyglot.Upload` class, which inherits all of the properties of
-the :class:`~polyglot.Upload` class such as checking balance, unspends, sending payments etc.
+Polyglot extends bitsv with the **polyglot.Upload** class, which inherits all of the properties of
+the **bitsv.PrivateKey** class such as checking balance, unspends, sending payments etc.
 
 
 1. Upload an image < 100kb with b:// protocol (https://github.com/unwriter/B):
