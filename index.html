@@ -32,97 +32,120 @@
   <div class="section" id="polyglot-bitcoin-protocols-made-easy">
 <h1>Polyglot: Bitcoin protocols made easy.<a class="headerlink" href="#polyglot-bitcoin-protocols-made-easy" title="Permalink to this headline">¶</a></h1>
 <p>Powered by BitSV: <a class="reference external" href="https://github.com/AustEcon/bitsv">https://github.com/AustEcon/bitsv</a></p>
-<div class="section" id="polyglot-mission">
-<h2>Polyglot Mission<a class="headerlink" href="#polyglot-mission" title="Permalink to this headline">¶</a></h2>
-<p>Lower barriers to entry for novice programmers and make metanet FUN!</p>
-<ul>
-<li><p>So why python and why polyglot?</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>Python is one of the main languages taught at 1st year university level and is arguably the most used language in the scientific disciplines where programming is seen as an adjunct to their core business.</p></li>
-<li><p>Python is also the language often taught to 1st, 2nd year CompSci / Software Engineering students to teach some basic principles of programming because the syntax is incredibly easy to understand and productivity is incredible.</p></li>
-<li><p>Bitcoin is difficult enough for people to wrap their heads around and <em>truly</em> understand as it is. Python, an interpreted language, is the perfect medium through which people can learn by doing and experimenting; running lines of code in real time and seeing what happened.</p></li>
-<li><p>Building webpages for 5 cents per megabyte is a huge breakthrough for ushering in a new wave of innovation on the metanet. Until now a cheap digital ocean cloud server at $5/month was your best bet - which isn’t that bad - but then there’s the steep learning curve of setting up an apache server and setting up your SFTP and SSH shells etc.</p></li>
-<li><p>I want to make the process so easy that it is basically three lines of code… and you spend the rest of your time learning html, css (which can be mostly learned in one or two weekends) and then adding in some js.</p></li>
-<li><p>Give the path to your files and simply upload to metanet! DONE!</p></li>
-</ul>
-</div></blockquote>
-</li>
-<li><p>Is it just for uploading files?</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>No I have much bigger plans for this.</p></li>
-<li><p>This library is designed to be the easiest way for pythonistas to interface with all of the various, growing bitcoin metanet protocols.</p></li>
-</ul>
-<p>Data Carriage:</p>
-<ul class="simple">
-<li><p>B:// (for multimedia up to 100kb) - https://github.com/unwriter/B</p></li>
-<li><p>BCAT:// (for multimedia up to 310mb uncompressed, 110GB with nested gzip) - https://bcat.bico.media/</p></li>
-</ul>
-<p>Endpoints:</p>
-<ul>
-<li><p>bottle browser (<a class="reference external" href="https://bottle.bitdb.network/">https://bottle.bitdb.network/</a>) (native metanet) browser and urls for mainstream browsers / 3rd party servers:</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>B:// (ref. by txid)</p></li>
-<li><p>C:// (ref. by sha256 hash of content)</p></li>
-<li><p>D:// (ref. by dynamic state - linked to identity system)</p></li>
-</ul>
-</div></blockquote>
-</li>
-</ul>
-<p>Identity Systems:</p>
-<ul class="simple">
-<li><p>AIP (<a class="reference external" href="https://github.com/BitcoinFiles/AUTHOR_IDENTITY_PROTOCOL">https://github.com/BitcoinFiles/AUTHOR_IDENTITY_PROTOCOL</a>)</p></li>
-<li><p>other identity protocols (e.g. Ryan X. Charles of Money Button will be announcing one at CoinGeek)</p></li>
-</ul>
-<p>Other protocols</p>
-<ul class="simple">
-<li><p>MAP protocol for linking all kinds of different protocols together (powerful)</p></li>
-<li><p>A.N.N.E. protocol by Mr Scatmann - <a class="reference external" href="https://medium.com/&#64;bsmith12251960/a-n-n-e-the-alpha-testing-begins-545f809c6129">https://medium.com/&#64;bsmith12251960/a-n-n-e-the-alpha-testing-begins-545f809c6129</a> (eagerly awaited)</p></li>
-</ul>
-</div></blockquote>
-</li>
-<li><p>A PyQt5 GUI will accompany this library to lower barriers to entry even further to non-technical folk <a class="reference external" href="https://github.com/AustEcon/polyglotGUI">https://github.com/AustEcon/polyglotGUI</a></p></li>
-</ul>
+<a class="reference external image-reference" href="https://travis-ci.org/AustEcon/polyglot"><img alt="https://img.shields.io/travis/AustEcon/polyglot.svg?branch=master&amp;style=flat-square" src="https://img.shields.io/travis/AustEcon/polyglot.svg?branch=master&amp;style=flat-square" /></a>
+<a class="reference external image-reference" href="https://pypi.org/project/bitsv"><img alt="https://img.shields.io/pypi/pyversions/bitsv.svg?style=flat-square" src="https://img.shields.io/pypi/pyversions/bitsv.svg?style=flat-square" /></a>
+<a class="reference external image-reference" href="https://en.wikipedia.org/wiki/MIT_License"><img alt="https://img.shields.io/badge/license-MIT-orange.svg?style=flat-square" src="https://img.shields.io/badge/license-MIT-orange.svg?style=flat-square" /></a>
+<hr class="docutils" />
+<p>Polyglot is  <a class="reference external" href="https://austecon.github.io/polyglot/guide/intro.html">designed to be</a>
+Bitcoin SV’s most intuitive way to interact with a myriad of metanet protocols through <em>python</em> -
+a match made in heaven.</p>
+<p>This library is heavily inspired by ofek’s library <a class="reference external" href="https://github.com/ofek/bit">bit</a>
+(<a class="reference external" href="https://github.com/AustEcon/bitsv">bitsv’s</a> predecessor)</p>
+<p><strong>Here are some examples:</strong></p>
+<p>Polyglot extends bitsv with the <code class="xref py py-class docutils literal notranslate"><span class="pre">Upload</span></code> class, which inherits all of the properties of
+the <code class="xref py py-class docutils literal notranslate"><span class="pre">Upload</span></code> class such as checking balance, unspends, sending payments etc.</p>
+<ol class="arabic simple">
+<li><p>Upload an image &lt; 100kb with b:// protocol (https://github.com/unwriter/B):</p></li>
+</ol>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">polyglot</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">uploader</span> <span class="o">=</span> <span class="n">polyglot</span><span class="o">.</span><span class="n">Upload</span><span class="p">(</span><span class="s1">&#39;your private key goes here in WIF format&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">file</span> <span class="o">=</span> <span class="s2">&quot;C:/Users/username/Pictures/Ludwig_von_Mises.jpg&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">media_type</span> <span class="o">=</span> <span class="n">uploader</span><span class="o">.</span><span class="n">get_media_type_for_file_name</span><span class="p">(</span><span class="nb">file</span><span class="p">)</span>  <span class="c1"># &#39;image/jpeg&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">encoding</span> <span class="o">=</span> <span class="n">uploader</span><span class="o">.</span><span class="n">get_encoding_for_file_name</span><span class="p">(</span><span class="nb">file</span><span class="p">)</span>  <span class="c1"># &#39;binary&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">file_name</span> <span class="o">=</span> <span class="n">uploader</span><span class="o">.</span><span class="n">get_filename</span><span class="p">(</span><span class="nb">file</span><span class="p">)</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">uploader</span><span class="o">.</span><span class="n">b_send_from_file</span><span class="p">(</span><span class="nb">file</span><span class="p">,</span> <span class="n">media_type</span><span class="p">,</span> <span class="n">encoding</span><span class="p">,</span> <span class="n">file_name</span><span class="o">=</span><span class="n">file_name</span><span class="p">)</span>
+</pre></div>
 </div>
-<div class="section" id="examples">
-<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
-<ul class="simple">
-<li><p>Code examples…</p></li>
-</ul>
+<p>See image here: <a class="reference external" href="https://bico.media/252ea6d5a4a4bfc956518403f6e5aa2ced1c2590d1120cd75341e0233d1b06e3">https://bico.media/252ea6d5a4a4bfc956518403f6e5aa2ced1c2590d1120cd75341e0233d1b06e3</a></p>
+<p>This works for a wide range of media types.</p>
+<p>In the next release, this will be done simply with:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">file</span> <span class="o">=</span> <span class="s2">&quot;C:/Users/username/Pictures/BSV_banner.jpg&quot;&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">uploader</span><span class="o">.</span><span class="n">upload_b</span><span class="p">(</span><span class="nb">file</span><span class="p">)</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>Upload large multimedia &gt; 100kb with bcat:// protocol (https://bcat.bico.media/):</p></li>
+</ol>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">file</span> <span class="o">=</span> <span class="s2">&quot;C:/Users/username/Pictures/BSV_banner.jpg&quot;&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">file_name</span> <span class="o">=</span> <span class="n">uploader</span><span class="o">.</span><span class="n">get_filename</span><span class="p">(</span><span class="nb">file</span><span class="p">)</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">txids</span> <span class="o">=</span> <span class="n">uploader</span><span class="o">.</span><span class="n">bcat_parts_send_from_file</span><span class="p">(</span><span class="nb">file</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">txid</span> <span class="o">=</span> <span class="n">uploader</span><span class="o">.</span><span class="n">bcat_linker_send_from_txids</span><span class="p">(</span>
+<span class="go">                txids=txids,</span>
+<span class="go">                media_type=uploader.get_media_type_for_file_name(file),</span>
+<span class="go">                encoding=uploader.get_encoding_for_file_name(file),</span>
+<span class="go">                file_name=file</span>
+<span class="go">                )</span>
+</pre></div>
+</div>
+<p>See image here: <a class="reference external" href="https://bico.media/be8b6a79e66934d3419265fbf3295d03e331a4c08098ae7f817a7592ffaedd2b">https://bico.media/be8b6a79e66934d3419265fbf3295d03e331a4c08098ae7f817a7592ffaedd2b</a></p>
+<p>In the next release, this will be done simply with:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">uploader</span><span class="o">.</span><span class="n">upload_bcat</span><span class="p">(</span><span class="nb">file</span><span class="p">)</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="3">
+<li><p>Basic Utilities</p></li>
+</ol>
+<p>Some basic utilities are included for working with utxo splitting and predicting the media type / handling of the file based on the filename.</p>
+<p>Already shown:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">get_media_type_for_file_name</span><span class="p">(</span><span class="nb">file</span><span class="p">)</span> <span class="c1">#--&gt; media_type</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_encoding_for_file_name</span><span class="p">(</span><span class="nb">file</span><span class="p">)</span> <span class="c1">#--&gt; encoding,</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_filename</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="c1">#--&gt; file_name.ext)</span>
+</pre></div>
+</div>
+<p>But additionally:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Upload</span><span class="o">.</span><span class="n">get_largest_utxo</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="c1">#--&gt; largest utxo (for splitting)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Upload</span><span class="o">.</span><span class="n">split_biggest_utxo</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="c1">#--&gt; splits utxo into 100000 satoshi amounts</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Upload</span><span class="o">.</span><span class="n">filter_utxos_for_bcat</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="c1">#-- &gt; filters utxos with 0 conf or too low amount to handle a 100kb tx</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_file_ext</span><span class="p">(</span><span class="nb">file</span><span class="p">)</span> <span class="c1">#--&gt; .ext</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">calculate_txid</span><span class="p">(</span><span class="n">rawtx</span><span class="p">)</span> <span class="c1">#--&gt; txid</span>
+</pre></div>
 </div>
 <div class="section" id="features-planned">
 <h2>Features (Planned)<a class="headerlink" href="#features-planned" title="Permalink to this headline">¶</a></h2>
-<ul>
+<div class="section" id="operational">
+<h3>Operational:<a class="headerlink" href="#operational" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
 <li><p>B:// (for multimedia up to 100kb) - https://github.com/unwriter/B</p></li>
 <li><p>BCAT:// (for multimedia up to 310mb uncompressed, 110GB with nested gzip) - https://bcat.bico.media/</p></li>
-<li><p>Bottle (<a class="reference external" href="https://bottle.bitdb.network/">https://bottle.bitdb.network/</a>) (native metanet) refs and mainstream urls for:</p>
-<blockquote>
-<div><ul class="simple">
+</ul>
+</div>
+<div class="section" id="bottle-metanet-native-browser-related">
+<h3>Bottle (metanet native browser) related:<a class="headerlink" href="#bottle-metanet-native-browser-related" title="Permalink to this headline">¶</a></h3>
+<p>Bottle (<a class="reference external" href="https://bottle.bitdb.network/">https://bottle.bitdb.network/</a>) (native metanet) refs and mainstream urls for:</p>
+<ul class="simple">
 <li><p>B:// (ref. by txid)</p></li>
 <li><p>C:// (ref. by sha256 hash of content)</p></li>
 <li><p>D:// (ref. by dynamic state - linked to identity system)</p></li>
 </ul>
-</div></blockquote>
-</li>
-<li><p>AIP (<a class="reference external" href="https://github.com/BitcoinFiles/AUTHOR_IDENTITY_PROTOCOL">https://github.com/BitcoinFiles/AUTHOR_IDENTITY_PROTOCOL</a>)</p></li>
-<li><p>other ID protocols (e.g. Ryan X. Charles of Money Button has been working hard on this area)</p></li>
+<p>Would like to make scripts for re-translating html document links to any of these three bitcoin resource links, so that one can quickly iterate building a web application on the local machine (and swap back and forth between local paths versus b://, c:// d:// etc. referencing style for deployment to the blockchain. (would just need a dictionary of {path : txid} pairs to be swapped back and forth. Many other features in mind (possibly for another repository).</p>
+</div>
+<div class="section" id="identity-protocols-money-button-aip-etc">
+<h3>Identity protocols (Money Button, AIP etc.):<a class="headerlink" href="#identity-protocols-money-button-aip-etc" title="Permalink to this headline">¶</a></h3>
+<p>I would like to add a very simple interface for interacting with
+- AIP (<a class="reference external" href="https://github.com/BitcoinFiles/AUTHOR_IDENTITY_PROTOCOL">https://github.com/BitcoinFiles/AUTHOR_IDENTITY_PROTOCOL</a>)
+- other ID protocols (e.g. Ryan X. Charles of Money Button has been working hard on this area)</p>
+</div>
+<div class="section" id="linking-mapping-database-functions">
+<h3>“Linking / mapping / database functions”:<a class="headerlink" href="#linking-mapping-database-functions" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
 <li><p>MAP protocol for linking all kinds of different protocols together (powerful)</p></li>
 <li><p>A.N.N.E. protocol by Mr Scatmann - <a class="reference external" href="https://medium.com/&#64;bsmith12251960/a-n-n-e-the-alpha-testing-begins-545f809c6129">https://medium.com/&#64;bsmith12251960/a-n-n-e-the-alpha-testing-begins-545f809c6129</a></p></li>
 </ul>
 </div>
+</div>
 <div class="section" id="installation">
 <h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
-<p>Polyglot is distributed on <cite>PyPI</cite> as a universal wheel and is available on Linux/macOS
+<p>Polyglot <em>will be</em> distributed on <cite>PyPI</cite> as a universal wheel and is available on Linux/macOS
 and Windows and supports Python 3.5+. <code class="docutils literal notranslate"><span class="pre">pip</span></code> &gt;= 8.1.2 is required.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ pip install polyglot <span class="c1"># pip3 if pip is Python 2 on your system.</span>
 </pre></div>
 </div>
+<p>In the meantime - you can simply clone the repository and run:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ python setup.py install
+</pre></div>
 </div>
-<div class="section" id="documentation">
-<h2>Documentation<a class="headerlink" href="#documentation" title="Permalink to this headline">¶</a></h2>
-<p>Docs are hosted by Github Pages and are automatically built and published by Travis after every successful commit to Polyglot’s master branch.</p>
 </div>
 <div class="section" id="user-guide">
 <h2>User Guide<a class="headerlink" href="#user-guide" title="Permalink to this headline">¶</a></h2>
@@ -131,12 +154,24 @@ and will then walk you through how to use BitSV with many examples and explanati
 of best practices.</p>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="guide/intro.html">Intro</a></li>
+<li class="toctree-l1"><a class="reference internal" href="guide/intro.html">Intro</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="guide/intro.html#polyglot-mission">Polyglot Mission</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guide/intro.html#features-planned">Features (Planned)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guide/intro.html#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guide/intro.html#documentation">Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guide/intro.html#user-guide">User Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guide/intro.html#credits">Credits</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guide/intro.html#donate">Donate</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
 <div class="section" id="credits">
 <h2>Credits<a class="headerlink" href="#credits" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>CoinGeek for putting on an amazing hackathon from which this project was born!</p></li>
+</ul>
 </div>
 <div class="section" id="donate">
 <h2>Donate<a class="headerlink" href="#donate" title="Permalink to this headline">¶</a></h2>

@@ -31,7 +31,113 @@
     
   <div class="section" id="intro">
 <span id="id1"></span><h1>Intro<a class="headerlink" href="#intro" title="Permalink to this headline">¶</a></h1>
-<p>Coming soon…</p>
+<p>Polyglot is designed to be a fast and simple way to interface with the myriad of growing protocols being build on bitcoin SV.</p>
+<div class="section" id="polyglot-mission">
+<h2>Polyglot Mission<a class="headerlink" href="#polyglot-mission" title="Permalink to this headline">¶</a></h2>
+<p>Lower barriers to entry for novice programmers and make metanet FUN!</p>
+<ul>
+<li><p>So why python and why polyglot?</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Python is one of the main languages taught at 1st year university level and is arguably the most used language in the scientific disciplines where programming is seen as an adjunct to their core business.</p></li>
+<li><p>Python is also the language often taught to 1st, 2nd year CompSci / Software Engineering students to teach some basic principles of programming because the syntax is incredibly easy to understand and productivity is incredible.</p></li>
+<li><p>Bitcoin is difficult enough for people to wrap their heads around and <em>truly</em> understand as it is. Python, an interpreted language, is the perfect medium through which people can learn by doing and experimenting; running lines of code in real time and seeing what happened.</p></li>
+<li><p>Building webpages for 5 cents per megabyte is a huge breakthrough for ushering in a new wave of innovation on the metanet. Until now a cheap digital ocean cloud server at $5/month was your best bet - which isn’t that bad - but then there’s the steep learning curve of setting up an apache server and setting up your SFTP and SSH shells etc.</p></li>
+<li><p>I want to make the process so easy that it is basically three lines of code… and you spend the rest of your time learning html, css (which can be mostly learned in one or two weekends) and then adding in some js.</p></li>
+<li><p>Give the path to your files and simply upload to metanet! DONE!</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>Is it just for uploading files?</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>No I have much bigger plans for this.</p></li>
+<li><p>This library is designed to be the easiest way for pythonistas to interface with all of the various, growing bitcoin metanet protocols.</p></li>
+</ul>
+<p>Data Carriage:</p>
+<ul class="simple">
+<li><p>B:// (for multimedia up to 100kb) - https://github.com/unwriter/B</p></li>
+<li><p>BCAT:// (for multimedia up to 310mb uncompressed, 110GB with nested gzip) - https://bcat.bico.media/</p></li>
+</ul>
+<p>Endpoints:</p>
+<ul>
+<li><p>bottle browser (<a class="reference external" href="https://bottle.bitdb.network/">https://bottle.bitdb.network/</a>) (native metanet) browser and urls for mainstream browsers / 3rd party servers:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>B:// (ref. by txid)</p></li>
+<li><p>C:// (ref. by sha256 hash of content)</p></li>
+<li><p>D:// (ref. by dynamic state - linked to identity system)</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+<p>Identity Systems:</p>
+<ul class="simple">
+<li><p>AIP (<a class="reference external" href="https://github.com/BitcoinFiles/AUTHOR_IDENTITY_PROTOCOL">https://github.com/BitcoinFiles/AUTHOR_IDENTITY_PROTOCOL</a>)</p></li>
+<li><p>other identity protocols (e.g. Ryan X. Charles of Money Button will be announcing one at CoinGeek)</p></li>
+</ul>
+<p>Other protocols</p>
+<ul class="simple">
+<li><p>MAP protocol for linking all kinds of different protocols together (powerful)</p></li>
+<li><p>A.N.N.E. protocol by Mr Scatmann - <a class="reference external" href="https://medium.com/&#64;bsmith12251960/a-n-n-e-the-alpha-testing-begins-545f809c6129">https://medium.com/&#64;bsmith12251960/a-n-n-e-the-alpha-testing-begins-545f809c6129</a> (eagerly awaited)</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>A PyQt5 GUI will accompany this library to lower barriers to entry even further to non-technical folk <a class="reference external" href="https://github.com/AustEcon/polyglotGUI">https://github.com/AustEcon/polyglotGUI</a></p></li>
+</ul>
+</div>
+<div class="section" id="features-planned">
+<h2>Features (Planned)<a class="headerlink" href="#features-planned" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p>B:// (for multimedia up to 100kb) - https://github.com/unwriter/B</p></li>
+<li><p>BCAT:// (for multimedia up to 310mb uncompressed, 110GB with nested gzip) - https://bcat.bico.media/</p></li>
+<li><p>Bottle (<a class="reference external" href="https://bottle.bitdb.network/">https://bottle.bitdb.network/</a>) (native metanet) refs and mainstream urls for:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>B:// (ref. by txid)</p></li>
+<li><p>C:// (ref. by sha256 hash of content)</p></li>
+<li><p>D:// (ref. by dynamic state - linked to identity system)</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>AIP (<a class="reference external" href="https://github.com/BitcoinFiles/AUTHOR_IDENTITY_PROTOCOL">https://github.com/BitcoinFiles/AUTHOR_IDENTITY_PROTOCOL</a>)</p></li>
+<li><p>other ID protocols (e.g. Ryan X. Charles of Money Button has been working hard on this area)</p></li>
+<li><p>MAP protocol for linking all kinds of different protocols together (powerful)</p></li>
+<li><p>A.N.N.E. protocol by Mr Scatmann - <a class="reference external" href="https://medium.com/&#64;bsmith12251960/a-n-n-e-the-alpha-testing-begins-545f809c6129">https://medium.com/&#64;bsmith12251960/a-n-n-e-the-alpha-testing-begins-545f809c6129</a></p></li>
+</ul>
+</div>
+<div class="section" id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<p>Polyglot is distributed on <cite>PyPI</cite> as a universal wheel and is available on Linux/macOS
+and Windows and supports Python 3.5+. <code class="docutils literal notranslate"><span class="pre">pip</span></code> &gt;= 8.1.2 is required.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ pip install polyglot <span class="c1"># pip3 if pip is Python 2 on your system.</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="documentation">
+<h2>Documentation<a class="headerlink" href="#documentation" title="Permalink to this headline">¶</a></h2>
+<p>Docs are hosted by Github Pages and are automatically built and published by Travis after every successful commit to Polyglot’s master branch.</p>
+</div>
+<div class="section" id="user-guide">
+<h2>User Guide<a class="headerlink" href="#user-guide" title="Permalink to this headline">¶</a></h2>
+<p>This section will tell you a little about the project, show how to install it,
+and will then walk you through how to use BitSV with many examples and explanations
+of best practices.</p>
+<div class="toctree-wrapper compound">
+</div>
+</div>
+<div class="section" id="credits">
+<h2>Credits<a class="headerlink" href="#credits" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>CoinGeek for putting on an amazing hackathon from which this project was born!</p></li>
+</ul>
+</div>
+<div class="section" id="donate">
+<h2>Donate<a class="headerlink" href="#donate" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Made by $AustEcon (Handcash handle)</p></li>
+</ul>
+</div>
 </div>
 
 
@@ -90,7 +196,18 @@
 </ul>
   <h3><a href="../index.html">Table of Contents</a></h3>
   <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Intro</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Intro</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#polyglot-mission">Polyglot Mission</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#features-planned">Features (Planned)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#documentation">Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#user-guide">User Guide</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#credits">Credits</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#donate">Donate</a></li>
+</ul>
+</li>
 </ul>
 <div class="relations">
 <h3>Related Topics</h3>
