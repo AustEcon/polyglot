@@ -159,7 +159,6 @@ class Upload(bitsv.PrivateKey):
     def b_create_rawtx_from_binary(self, binary, media_type, encoding=' ', file_name=' '):
         """Creates rawtx for sending data (<100kb) to the blockchain via the B:// protocol
         see: https://github.com/unwriter/B or https://b.bitdb.network/ for details"""
-
         hex_data = binary.hex()
         lst_of_pushdata = [(B, "utf-8"),  # B:// protocol prefix
                            (hex_data, 'hex'),
@@ -169,26 +168,38 @@ class Upload(bitsv.PrivateKey):
         lst_of_pushdata = op_return.create_pushdata(lst_of_pushdata)
         return self.create_transaction(outputs=[], message=lst_of_pushdata, combine=False, custom_pushdata=True, unspents=self.filter_utxos_for_bcat())
 
-    def b_create_rawtx_from_file(self, file, media_type, encoding=' ', file_name=' '):
-        # FIXME - add checks for file extension type --> enforce correct parameters for protocol
+    def b_create_rawtx_from_file(self, file, media_type=None, encoding=None, file_name=None):
+        # FIXME - add checks
+        if media_type is None:
+            media_type = self.get_media_type_for_file_name(file)
+        if encoding is None:
+            encoding = self.get_encoding_for_file_name(file)
+        if file_name is None:
+            file_name = self.get_filename(file)
         binary = self.file_to_binary(file)
         return self.b_create_rawtx_from_binary(binary, media_type, encoding=encoding, file_name=file_name)
 
-    def b_create_rawtx_from_file_ezmode(self, file):
-        """This function predicts the media_type, encoding and b:// filename from 'file' name and extension"""
-        media_type = self.get_media_type_for_file_name(file)
-        encoding = self.get_encoding_for_file_name(file)
-        file_name = self.get_filename(file)
-        binary = self.file_to_binary(file)
-        return self.b_create_rawtx_from_binary(binary, media_type, encoding=encoding, file_name=file_name)
+    def b_send_from_file(self, file, media_type=None, encoding=None, file_name=None):
+        """Convenience function to upload any file to the blockchain via the B:// protocol
+        Extracts defaults for the media_type, encoding and filename from the file path
+        Alternatively these parameters can be overridden as required
+
+        A whitespace string can be used for encoding and filename if preferred"""
+        if media_type is None:
+            media_type = self.get_media_type_for_file_name(file)
+        if encoding is None:
+            encoding = self.get_encoding_for_file_name(file)
+        if file_name is None:
+            file_name = self.get_filename(file)
+        rawtx = self.b_create_rawtx_from_file(file, media_type, encoding=encoding, file_name=file_name)
+        return self.send_rawtx(rawtx)
 
     def b_send_from_binary(self, binary, media_type, encoding=' ', file_name=' '):
         rawtx = self.b_create_rawtx_from_binary(binary, media_type, encoding=encoding, file_name=file_name)
         return self.send_rawtx(rawtx)
 
-    def b_send_from_file(self, file, media_type, encoding=' ', file_name=' '):
-        rawtx = self.b_create_rawtx_from_file(file, media_type, encoding=encoding, file_name=file_name)
-        return self.send_rawtx(rawtx)
+    # alias
+    upload_b = b_send_from_file
 
     # BCAT
 
@@ -216,19 +227,14 @@ class Upload(bitsv.PrivateKey):
             # Note: relying on bitsv to intelligently select utxos here AND if key doesn't have enough separate utxos
             # with >= 1 conf the series of txs will start to fail as bitsv will start drawing from the pool of utxos
             # with 0 conf (and probably close to 100kb tx size --> which I suspect breaches another (less known) network
-            # rule about the total *SIZE* of a chain of txs between blocks (i.e. not only a "speed limit" of 25 tx between blocks
+            # rule about the total *SIZE* of a chain of txs between blocks (i.e. not only a "speed limit" of 25 tx
+            # between blocks
+
             lst_of_pushdata = op_return.create_pushdata(lst_of_pushdata)
-            # FIXME to avoid having to wait for API to update unspents - need to add a local function to remove these recently used utxos
             time.sleep(2)
             txid = self.send(outputs=[], message=lst_of_pushdata, fee=1, combine=False, custom_pushdata=True, unspents=self.filter_utxos_for_bcat())
 
             txs.append(txid)
-            # FIXME - Currently using a hack of 5 second sleep to give time for BitIndex to update my correct UTXOs
-            #  Solutions for this (commonly encountered issue) include 1) having a list of utxos to rotate through
-            #  e.g. 25 keys and can use each one up to 25 times between blocks ("speed limit" = 25).
-            #  or 2) splitting one utxo into many and then using those for sending whatever you need to send
-            #  this second way, I imagine you'd want to calculate the *exact* amount required so that you don't have
-            #  dust left over in many utxos.
         return txs
 
     def bcat_parts_send_from_file(self, file):
