@@ -1,6 +1,5 @@
 import os
 from io import BytesIO
-import time
 import bitsv
 from bitsv import op_return
 from bitsv import crypto
@@ -14,6 +13,8 @@ BCATPART = '1ChDHzdd1H4wSjgGMHyndZm6qxEDGjqpJL'  # https://bcat.bico.media/ (raw
 D = '19iG3WTYSsbyos3uJ733yK4zEioi1FesNU'  # Dynamic - ownership over state of address
 AIP = '15PciHG22SNLQJXMoSUaWVi7WSqc7hCfva'  # https://github.com/BitcoinFiles/AUTHOR_IDENTITY_PROTOCOL
 MAP = '1PuQa7K62MiKCtssSLKy1kh56WWU7MtUR5'  # MAP protocol.
+
+SPACE_AVAILABLE_PER_TX_BCAT_PART = 100000 - len(BCATPART.encode('utf-8')) - 10000  # temporary hack (-) 10,000 bytes
 
 MEDIA_TYPE = {
     # Images
@@ -118,11 +119,10 @@ class Upload(bitsv.PrivateKey):
         return ids
 
     def filter_utxos_for_bcat(self):
-        """filters out all utxos with 0 conf or too low amount"""
+        """filters out all utxos with 0 conf or too low amount for use in a BCAT part transaction"""
         filtered_utxos = []
         for utxo in self.get_unspents():
-            # if utxo meets requirement for at least a single use with bcat parts tx (of assumed max total tx size 100kb)
-            if utxo.confirmations != 0 and utxo.amount >= 0.001:
+            if utxo.confirmations != 0 and utxo.amount >= 100000:
                 filtered_utxos.append(utxo)
         return filtered_utxos
 
@@ -203,52 +203,56 @@ class Upload(bitsv.PrivateKey):
 
     # BCAT
 
-    def bcat_parts_send_from_binary(self, binary):
-        """Takes in binary data for upload - returns list of rawtx"""
+    @staticmethod
+    def get_number_bcat_parts(length_binary):
+        num_parts = (length_binary // SPACE_AVAILABLE_PER_TX_BCAT_PART) + 1
+        return num_parts
 
-        # Note: There is no "bcat_parts_create_from_binary or file because the utxos need to be refreshed after each
-        # transaction - otherwise there will be a "txn-mempool-conflict" trying to double spend the same utxos
+    def bcat_parts_send_from_binary(self, binary, utxos=None):
+        """Takes in binary data for upload - returns list of rawtx"""
 
         # Get full binary
         stream = BytesIO(binary)
+        if utxos is None:
+            utxos = self.filter_utxos_for_bcat()
 
-        # FIXME I have just subtracted 10000 bytes as a hack to not let total tx size reach 100kb
-
-        # Available space per tx = 100kb - BCATPART - "safety margin of 10,000 bytes for utxos etc"
-        space_available_per_tx = 100000 - len(BCATPART.encode('utf-8')) - 10000  # temporary hack (-) 10,000 bytes
         txs = []
+        number_bcat_parts = self.get_number_bcat_parts(len(binary))
 
-        # Send each transaction in list (bitsv should update unspents automatically after each tx)
-        num_of_tx_required = (len(binary) // space_available_per_tx) + 1
-        for _ in range(num_of_tx_required):
-            data = stream.read(space_available_per_tx)
+        if len(utxos) - 1 >= number_bcat_parts:  # Leaves one Fresh utxo leftover for linker.
+            pass
+        else:
+            raise ValueError("insufficient 'Fresh' unspent transaction outputs (utxos) to complete the "
+                             "BCAT upload. Please generate more 'Fresh' utxos and try again")
+
+        for i in range(number_bcat_parts):
+            data = stream.read(SPACE_AVAILABLE_PER_TX_BCAT_PART)
             lst_of_pushdata = [(BCATPART, 'utf-8'),
                                (data.hex(), 'hex')]
-            # Note: relying on bitsv to intelligently select utxos here AND if key doesn't have enough separate utxos
-            # with >= 1 conf the series of txs will start to fail as bitsv will start drawing from the pool of utxos
-            # with 0 conf (and probably close to 100kb tx size --> which I suspect breaches another (less known) network
-            # rule about the total *SIZE* of a chain of txs between blocks (i.e. not only a "speed limit" of 25 tx
-            # between blocks
 
             lst_of_pushdata = op_return.create_pushdata(lst_of_pushdata)
-            time.sleep(2)
-            txid = self.send(outputs=[], message=lst_of_pushdata, fee=1, combine=False, custom_pushdata=True, unspents=self.filter_utxos_for_bcat())
-
+            # bitsv sorts utxos by amount and then selects first the ones of *lowest* amount
+            # so here we will manually select "Fresh" utxos (with 100,000 satoshis, 1 conf) one at a time
+            fresh_utxo = utxos[i:i+1]
+            txid = self.send(outputs=[], message=lst_of_pushdata, fee=1, combine=False,
+                             custom_pushdata=True, unspents=fresh_utxo)
             txs.append(txid)
         return txs
 
-    def bcat_parts_send_from_file(self, file):
-        # FIXME - check if this will work for plain text / html etc.
+    def bcat_parts_send_from_file(self, file, utxos=None):
+        if utxos is None:
+            utxos = self.filter_utxos_for_bcat()
         binary = self.file_to_binary(file)
-        return self.bcat_parts_send_from_binary(binary)
+        return self.bcat_parts_send_from_binary(binary, utxos=utxos)
 
-    def bcat_linker_create_from_txids(self, lst_of_txids, media_type, encoding, file_name, info=' ', flags=' '):
+    def bcat_linker_create_from_txids(self, lst_of_txids, media_type, encoding, file_name, info=' ', flags=' ', utxos=None):
         """Creates bcat transaction to link up "bcat parts" (with the stored data).
         This BCAT:// protocol allows for concatenating data > 100kb (up to 310MB uncompressed) to the blockchain.
         see: https://bcat.bico.media/
 
         returns rawtx"""
-
+        if utxos is None:
+            utxos = self.filter_utxos_for_bcat()
         # FIXME - add checks
         lst_of_pushdata = [(BCAT, 'utf-8'),
                            (info, "utf-8"),  # B:// protocol prefix
@@ -259,23 +263,25 @@ class Upload(bitsv.PrivateKey):
 
         lst_of_pushdata.extend([(tx, 'hex') for tx in lst_of_txids])
         lst_of_pushdata = op_return.create_pushdata(lst_of_pushdata)
-        return self.create_transaction(outputs=[], message=lst_of_pushdata, combine=False, custom_pushdata=True, unspents=self.filter_utxos_for_bcat())
+        return self.create_transaction(outputs=[], message=lst_of_pushdata, combine=False, custom_pushdata=True, unspents=utxos[-1:])
 
-    def bcat_linker_send_from_txids(self, lst_of_txids, media_type, encoding, file_name=' ', info=' ', flags=' '):
+    def bcat_linker_send_from_txids(self, lst_of_txids, media_type, encoding, file_name=' ', info=' ', flags=' ', utxos=None):
         """Creates and sends bcat transaction to link up "bcat parts" (with the stored data).
         This BCAT:// protocol allows for concatenating data > 100kb (up to 310MB uncompressed) to the blockchain.
         see: https://bcat.bico.media/"""
-
+        if utxos is None:
+            utxos = self.filter_utxos_for_bcat()
         rawtx = self.bcat_linker_create_from_txids(lst_of_txids, media_type, encoding, file_name, info=info,
-                                                   flags=flags)
+                                                   flags=flags, utxos=utxos[-1:])
         return self.send_rawtx(rawtx)
 
     def upload_bcat(self, file):
         """broadcasts bcat parts and then bcat linker tx. Returns txid of linker."""
-        txids = self.bcat_parts_send_from_file(file)
-        time.sleep(2)
+        utxos = self.filter_utxos_for_bcat()
+        txids = self.bcat_parts_send_from_file(file, utxos)
         txid = self.bcat_linker_send_from_txids(lst_of_txids=txids,
                                                 media_type=self.get_media_type_for_file_name(file),
                                                 file_name=file,
-                                                encoding=self.get_encoding_for_file_name(file))
+                                                encoding=self.get_encoding_for_file_name(file),
+                                                utxos=utxos[-1:])
         return txid
