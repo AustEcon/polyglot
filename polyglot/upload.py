@@ -14,7 +14,9 @@ D = '19iG3WTYSsbyos3uJ733yK4zEioi1FesNU'  # Dynamic - ownership over state of ad
 AIP = '15PciHG22SNLQJXMoSUaWVi7WSqc7hCfva'  # https://github.com/BitcoinFiles/AUTHOR_IDENTITY_PROTOCOL
 MAP = '1PuQa7K62MiKCtssSLKy1kh56WWU7MtUR5'  # MAP protocol.
 
+# Temp hack to allow space for funding inputs (10,000 bytes allocated)
 SPACE_AVAILABLE_PER_TX_BCAT_PART = 100000 - len(BCATPART.encode('utf-8')) - 10000  # temporary hack (-) 10,000 bytes
+
 
 MEDIA_TYPE = {
     # Images

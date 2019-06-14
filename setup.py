@@ -7,7 +7,7 @@ with open('polyglot/__init__.py', 'r') as f:
             break
 
 setup(
-    name='polyglot',
+    name='polyglot-bitcoin',
     version=version,
     description='Bitcoin protocols made easy.',
     long_description=open('README.rst', 'r').read(),
@@ -29,6 +29,7 @@ setup(
         'payments',
         'tools',
         'wallet',
+        'bitcoin',
     ],
 
     classifiers=[
