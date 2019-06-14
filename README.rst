@@ -36,71 +36,44 @@ the **bitsv.PrivateKey** class such as checking balance, unspends, sending payme
 
     >>> import polyglot
     >>> uploader = polyglot.Upload('your private key goes here in WIF format')
-    >>> file = "C:/Users/username/Pictures/Ludwig_von_Mises.jpg"
-    >>> media_type = uploader.get_media_type_for_file_name(file)  # 'image/jpeg'
-    >>> encoding = uploader.get_encoding_for_file_name(file)  # 'binary'
-    >>> file_name = uploader.get_filename(file)
-    >>>
-    >>> uploader.b_send_from_file(file, media_type, encoding, file_name=file_name)
-    '252ea6d5a4a4bfc956518403f6e5aa2ced1c2590d1120cd75341e0233d1b06e3'
+    >>> # Optional parameters shown for completeness are populated from the file path by default
+    >>> uploader.upload_b(file, media_type=None, encoding=None, file_name=None)
 
 See image here: https://bico.media/252ea6d5a4a4bfc956518403f6e5aa2ced1c2590d1120cd75341e0233d1b06e3
 
 This works for a wide range of media types.
-
-In the next release, this will be done simply with:
-
-.. code-block:: python
-
-    >>> file = "C:/Users/username/Pictures/BSV_banner.jpg""
-    >>> uploader.upload_b(file)
-
 
 2. Upload large multimedia > 100kb with bcat:// protocol (https://bcat.bico.media/):
 
 .. code-block:: python
 
     >>> file = "C:/Users/username/Pictures/BSV_banner.jpg""
-    >>> file_name = uploader.get_filename(file)
-    >>>
-    >>> txids = uploader.bcat_parts_send_from_file(file)
-    >>> txid = uploader.bcat_linker_send_from_txids(
-                    txids=txids,
-                    media_type=uploader.get_media_type_for_file_name(file),
-                    encoding=uploader.get_encoding_for_file_name(file),
-                    file_name=file
-                    )
-    'be8b6a79e66934d3419265fbf3295d03e331a4c08098ae7f817a7592ffaedd2b'
+    >>> uploader.upload_bcat(file)
 
 See image here: https://bico.media/be8b6a79e66934d3419265fbf3295d03e331a4c08098ae7f817a7592ffaedd2b
 
-In the next release, this will be done simply with:
-
-.. code-block:: python
-
-    >>> uploader.upload_bcat(file)
+Please note: For BCAT protocol, it is very important to have an adequate number of "fresh" utxos with 1 confirmation to generate the parts. To do this see #3 Utilities (next).
 
 3. Basic Utilities
 
-Some basic utilities are included for working with utxo splitting and predicting the media type / handling of the file based on the filename.
-
-Already shown:
+Some basic utilities are included for working with utxo splitting and manually extracting the media type / handling of the file based on the file path (with extension) - to cover some potentially more advanced useage patterns of the B and BCAT protocols.
 
 .. code-block:: python
 
-    >>> get_media_type_for_file_name(file) #--> media_type
-    >>> get_encoding_for_file_name(file) #--> encoding,
-    >>> get_filename(path) #--> file_name.ext)
+    >>> uploader.get_media_type_for_file_name(file) #--> media_type
+    >>> uploader.get_encoding_for_file_name(file) #--> encoding,
+    >>> uploader.get_filename(path) #--> file_name.ext)
 
 But additionally:
 
 .. code-block:: python
 
-    >>> Upload.get_largest_utxo(self) #--> largest utxo (for splitting)
-    >>> Upload.split_biggest_utxo(self) #--> splits utxo into 100000 satoshi amounts
-    >>> Upload.filter_utxos_for_bcat(self) #-- > filters utxos with 0 conf or too low amount to handle a 100kb tx
+    >>> uploader.get_largest_utxo(self) #--> largest utxo (for splitting)
+    >>> uploader.split_biggest_utxo(self) #--> splits utxo into 100000 satoshi amounts
+    >>> uploader.filter_utxos_for_bcat(self) #-- > filters utxos with 0 conf or too low amount to handle a 100kb tx
     >>> get_file_ext(file) #--> .ext
     >>> calculate_txid(rawtx) #--> txid
+
 
 
 Features
