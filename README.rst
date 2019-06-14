@@ -103,57 +103,78 @@ But additionally:
     >>> calculate_txid(rawtx) #--> txid
 
 
-Features (Planned)
-------------------
+Features
+--------
 
-Operational:
+Currently Working:
+~~~~~~~~~~~~~~~~~~
+
+1. Uploading
 ~~~~~~~~~~~~
-
 - B:// (for multimedia up to 100kb) - https://github.com/unwriter/B
 - BCAT:// (for multimedia up to 310mb uncompressed, 110GB with nested gzip) - https://bcat.bico.media/
 
-Bottle (metanet native browser) related:
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+2. UTXO management
+~~~~~~~~~~~~~~~~~~
+- Utilities for splitting / selecting UTXOs for a single private key - especially for use in BCAT protocol.
+- Bip32 level UTXO management is also planned
 
-Bottle (https://bottle.bitdb.network/) (native metanet) refs and mainstream urls for:
+Planned:
+~~~~~~~~
+
+1. HTML reference converter
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+A Class that will allow for easy conversion of metanet style referencing:
 
 - B:// (ref. by txid)
 - C:// (ref. by sha256 hash of content)
 - D:// (ref. by dynamic state - linked to identity system)
 
-Would like to make scripts for re-translating html document links to any of these three bitcoin resource links, so that one can quickly iterate building a web application on the local machine (and swap back and forth between local paths versus b://, c:// d:// etc. referencing style for deployment to the blockchain. (would just need a dictionary of {path : txid} pairs to be swapped back and forth. Many other features in mind (possibly for another repository).
+To localhost paths or mainstream internet urls as well as toggling it all back and forth.
 
-Identity protocols (Money Button, AIP etc.):
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+This will allow quick iteration of building a web application on the local machine but also rapid conversion to b://, c:// d:// etc. referencing styles for deployment to the blockchain.
+
+Would just need a dictionary of {path : B:// reference} pairs for example to be swapped back and forth. Many other features in mind (possibly for another repository).
+
+2. Downloading
+~~~~~~~~~~~~~~
+Should be able to specify content by:
+
+- B:// (ref. by txid)
+- C:// (ref. by sha256 hash of content)
+- D:// (ref. by dynamic state - linked to identity system)
+- Should work for content uploaded via BCAT
+
+And have it be downloaded.
+
+If it is a static html page then should optionally allow retreival of all referenced content to reconstruct the entire webpage on the local machine.
+
+3. Identity protocols (Money Button, AIP etc.):
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 I would like to add a very simple interface for interacting with
 - AIP (https://github.com/BitcoinFiles/AUTHOR_IDENTITY_PROTOCOL)
 - other ID protocols (e.g. Ryan X. Charles of Money Button has been working hard on this area)
 
-"Linking / mapping / database functions":
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+4. "Linking / mapping / database functions":
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 - MAP protocol for linking all kinds of different protocols together (powerful)
-- A.N.N.E. protocol by Mr Scatmann - https://medium.com/@bsmith12251960/a-n-n-e-the-alpha-testing-begins-545f809c6129
+- (maybe) A.N.N.E. protocol by Mr Scatmann - https://medium.com/@bsmith12251960/a-n-n-e-the-alpha-testing-begins-545f809c6129
 
 Installation
 ------------
 
-Polyglot *will be* distributed on `PyPI` as a universal wheel and is available on Linux/macOS
-and Windows and supports Python 3.5+. ``pip`` >= 8.1.2 is required.
+Polyglot is distributed on `PyPI` as a universal wheel and is available on Linux/macOS
+and Windows and supports Python 3.6+. ``pip`` >= 8.1.2 is required.
 
 .. code-block:: bash
 
-    $ pip install polyglot # pip3 if pip is Python 2 on your system.
-
-In the meantime - you can simply clone the repository and run:
-
-.. code-block:: bash
-
-    $ python setup.py install
+    $ pip install polyglot-bitcoin # pip3 if pip is Python 2 on your system.
 
 
 Credits
 -------
-- CoinGeek for putting on an amazing hackathon from which this project was born!
+- CoinGeek / nChain / Bitcoin Association for putting on an amazing hackathon from which this project was born!
 
 Donate
 --------
