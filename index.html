@@ -49,101 +49,103 @@ the <strong>bitsv.PrivateKey</strong> class such as checking balance, unspends, 
 </ol>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">polyglot</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">uploader</span> <span class="o">=</span> <span class="n">polyglot</span><span class="o">.</span><span class="n">Upload</span><span class="p">(</span><span class="s1">&#39;your private key goes here in WIF format&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">file</span> <span class="o">=</span> <span class="s2">&quot;C:/Users/username/Pictures/Ludwig_von_Mises.jpg&quot;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">media_type</span> <span class="o">=</span> <span class="n">uploader</span><span class="o">.</span><span class="n">get_media_type_for_file_name</span><span class="p">(</span><span class="nb">file</span><span class="p">)</span>  <span class="c1"># &#39;image/jpeg&#39;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">encoding</span> <span class="o">=</span> <span class="n">uploader</span><span class="o">.</span><span class="n">get_encoding_for_file_name</span><span class="p">(</span><span class="nb">file</span><span class="p">)</span>  <span class="c1"># &#39;binary&#39;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">file_name</span> <span class="o">=</span> <span class="n">uploader</span><span class="o">.</span><span class="n">get_filename</span><span class="p">(</span><span class="nb">file</span><span class="p">)</span>
-<span class="go">&gt;&gt;&gt;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">uploader</span><span class="o">.</span><span class="n">b_send_from_file</span><span class="p">(</span><span class="nb">file</span><span class="p">,</span> <span class="n">media_type</span><span class="p">,</span> <span class="n">encoding</span><span class="p">,</span> <span class="n">file_name</span><span class="o">=</span><span class="n">file_name</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Optional parameters shown for completeness are populated from the file path by default</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">uploader</span><span class="o">.</span><span class="n">upload_b</span><span class="p">(</span><span class="nb">file</span><span class="p">,</span> <span class="n">media_type</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">file_name</span><span class="o">=</span><span class="bp">None</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>See image here: <a class="reference external" href="https://bico.media/252ea6d5a4a4bfc956518403f6e5aa2ced1c2590d1120cd75341e0233d1b06e3">https://bico.media/252ea6d5a4a4bfc956518403f6e5aa2ced1c2590d1120cd75341e0233d1b06e3</a></p>
 <p>This works for a wide range of media types.</p>
-<p>In the next release, this will be done simply with:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">file</span> <span class="o">=</span> <span class="s2">&quot;C:/Users/username/Pictures/BSV_banner.jpg&quot;&quot;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">uploader</span><span class="o">.</span><span class="n">upload_b</span><span class="p">(</span><span class="nb">file</span><span class="p">)</span>
-</pre></div>
-</div>
 <ol class="arabic simple" start="2">
 <li><p>Upload large multimedia &gt; 100kb with bcat:// protocol (https://bcat.bico.media/):</p></li>
 </ol>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">file</span> <span class="o">=</span> <span class="s2">&quot;C:/Users/username/Pictures/BSV_banner.jpg&quot;&quot;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">file_name</span> <span class="o">=</span> <span class="n">uploader</span><span class="o">.</span><span class="n">get_filename</span><span class="p">(</span><span class="nb">file</span><span class="p">)</span>
-<span class="go">&gt;&gt;&gt;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">txids</span> <span class="o">=</span> <span class="n">uploader</span><span class="o">.</span><span class="n">bcat_parts_send_from_file</span><span class="p">(</span><span class="nb">file</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">txid</span> <span class="o">=</span> <span class="n">uploader</span><span class="o">.</span><span class="n">bcat_linker_send_from_txids</span><span class="p">(</span>
-<span class="go">                txids=txids,</span>
-<span class="go">                media_type=uploader.get_media_type_for_file_name(file),</span>
-<span class="go">                encoding=uploader.get_encoding_for_file_name(file),</span>
-<span class="go">                file_name=file</span>
-<span class="go">                )</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">uploader</span><span class="o">.</span><span class="n">upload_bcat</span><span class="p">(</span><span class="nb">file</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>See image here: <a class="reference external" href="https://bico.media/be8b6a79e66934d3419265fbf3295d03e331a4c08098ae7f817a7592ffaedd2b">https://bico.media/be8b6a79e66934d3419265fbf3295d03e331a4c08098ae7f817a7592ffaedd2b</a></p>
-<p>In the next release, this will be done simply with:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">uploader</span><span class="o">.</span><span class="n">upload_bcat</span><span class="p">(</span><span class="nb">file</span><span class="p">)</span>
-</pre></div>
-</div>
+<p>Please note: For BCAT protocol, it is very important to have an adequate number of “fresh” utxos with 1 confirmation to generate the parts. To do this see #3 Utilities (next).</p>
 <ol class="arabic simple" start="3">
 <li><p>Basic Utilities</p></li>
 </ol>
-<p>Some basic utilities are included for working with utxo splitting and predicting the media type / handling of the file based on the filename.</p>
-<p>Already shown:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">get_media_type_for_file_name</span><span class="p">(</span><span class="nb">file</span><span class="p">)</span> <span class="c1">#--&gt; media_type</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">get_encoding_for_file_name</span><span class="p">(</span><span class="nb">file</span><span class="p">)</span> <span class="c1">#--&gt; encoding,</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">get_filename</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="c1">#--&gt; file_name.ext)</span>
+<p>Some basic utilities are included for working with utxo splitting and manually extracting the media type / handling of the file based on the file path (with extension) - to cover some potentially more advanced useage patterns of the B and BCAT protocols.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">uploader</span><span class="o">.</span><span class="n">get_media_type_for_file_name</span><span class="p">(</span><span class="nb">file</span><span class="p">)</span> <span class="c1">#--&gt; media_type</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">uploader</span><span class="o">.</span><span class="n">get_encoding_for_file_name</span><span class="p">(</span><span class="nb">file</span><span class="p">)</span> <span class="c1">#--&gt; encoding,</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">uploader</span><span class="o">.</span><span class="n">get_filename</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="c1">#--&gt; file_name.ext)</span>
 </pre></div>
 </div>
 <p>But additionally:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Upload</span><span class="o">.</span><span class="n">get_largest_utxo</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="c1">#--&gt; largest utxo (for splitting)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">Upload</span><span class="o">.</span><span class="n">split_biggest_utxo</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="c1">#--&gt; splits utxo into 100000 satoshi amounts</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">Upload</span><span class="o">.</span><span class="n">filter_utxos_for_bcat</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="c1">#-- &gt; filters utxos with 0 conf or too low amount to handle a 100kb tx</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">uploader</span><span class="o">.</span><span class="n">get_largest_utxo</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="c1">#--&gt; largest utxo (for splitting)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">uploader</span><span class="o">.</span><span class="n">split_biggest_utxo</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="c1">#--&gt; splits utxo into 100000 satoshi amounts</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">uploader</span><span class="o">.</span><span class="n">filter_utxos_for_bcat</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="c1">#-- &gt; filters utxos with 0 conf or too low amount to handle a 100kb tx</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">get_file_ext</span><span class="p">(</span><span class="nb">file</span><span class="p">)</span> <span class="c1">#--&gt; .ext</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">calculate_txid</span><span class="p">(</span><span class="n">rawtx</span><span class="p">)</span> <span class="c1">#--&gt; txid</span>
 </pre></div>
 </div>
-<div class="section" id="features-planned">
-<h2>Features (Planned)<a class="headerlink" href="#features-planned" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="operational">
-<h3>Operational:<a class="headerlink" href="#operational" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="features">
+<h2>Features<a class="headerlink" href="#features" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="currently-working">
+<h3>Currently Working:<a class="headerlink" href="#currently-working" title="Permalink to this headline">¶</a></h3>
+</div>
+<div class="section" id="uploading">
+<h3>1. Uploading<a class="headerlink" href="#uploading" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>B:// (for multimedia up to 100kb) - https://github.com/unwriter/B</p></li>
 <li><p>BCAT:// (for multimedia up to 310mb uncompressed, 110GB with nested gzip) - https://bcat.bico.media/</p></li>
 </ul>
 </div>
-<div class="section" id="bottle-metanet-native-browser-related">
-<h3>Bottle (metanet native browser) related:<a class="headerlink" href="#bottle-metanet-native-browser-related" title="Permalink to this headline">¶</a></h3>
-<p>Bottle (<a class="reference external" href="https://bottle.bitdb.network/">https://bottle.bitdb.network/</a>) (native metanet) refs and mainstream urls for:</p>
+<div class="section" id="utxo-management">
+<h3>2. UTXO management<a class="headerlink" href="#utxo-management" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>Utilities for splitting / selecting UTXOs for a single private key - especially for use in BCAT protocol.</p></li>
+<li><p>Bip32 level UTXO management is also planned</p></li>
+</ul>
+</div>
+<div class="section" id="planned">
+<h3>Planned:<a class="headerlink" href="#planned" title="Permalink to this headline">¶</a></h3>
+</div>
+<div class="section" id="html-reference-converter">
+<h3>1. HTML reference converter<a class="headerlink" href="#html-reference-converter" title="Permalink to this headline">¶</a></h3>
+<p>A Class that will allow for easy conversion of metanet style referencing:</p>
 <ul class="simple">
 <li><p>B:// (ref. by txid)</p></li>
 <li><p>C:// (ref. by sha256 hash of content)</p></li>
 <li><p>D:// (ref. by dynamic state - linked to identity system)</p></li>
 </ul>
-<p>Would like to make scripts for re-translating html document links to any of these three bitcoin resource links, so that one can quickly iterate building a web application on the local machine (and swap back and forth between local paths versus b://, c:// d:// etc. referencing style for deployment to the blockchain. (would just need a dictionary of {path : txid} pairs to be swapped back and forth. Many other features in mind (possibly for another repository).</p>
+<p>To localhost paths or mainstream internet urls as well as toggling it all back and forth.</p>
+<p>This will allow quick iteration of building a web application on the local machine but also rapid conversion to b://, c:// d:// etc. referencing styles for deployment to the blockchain.</p>
+<p>Would just need a dictionary of {path : B:// reference} pairs for example to be swapped back and forth. Many other features in mind (possibly for another repository).</p>
+</div>
+<div class="section" id="downloading">
+<h3>2. Downloading<a class="headerlink" href="#downloading" title="Permalink to this headline">¶</a></h3>
+<p>Should be able to specify content by:</p>
+<ul class="simple">
+<li><p>B:// (ref. by txid)</p></li>
+<li><p>C:// (ref. by sha256 hash of content)</p></li>
+<li><p>D:// (ref. by dynamic state - linked to identity system)</p></li>
+<li><p>Should work for content uploaded via BCAT</p></li>
+</ul>
+<p>And have it be downloaded.</p>
+<p>If it is a static html page then should optionally allow retreival of all referenced content to reconstruct the entire webpage on the local machine.</p>
 </div>
 <div class="section" id="identity-protocols-money-button-aip-etc">
-<h3>Identity protocols (Money Button, AIP etc.):<a class="headerlink" href="#identity-protocols-money-button-aip-etc" title="Permalink to this headline">¶</a></h3>
+<h3>3. Identity protocols (Money Button, AIP etc.):<a class="headerlink" href="#identity-protocols-money-button-aip-etc" title="Permalink to this headline">¶</a></h3>
 <p>I would like to add a very simple interface for interacting with
 - AIP (<a class="reference external" href="https://github.com/BitcoinFiles/AUTHOR_IDENTITY_PROTOCOL">https://github.com/BitcoinFiles/AUTHOR_IDENTITY_PROTOCOL</a>)
 - other ID protocols (e.g. Ryan X. Charles of Money Button has been working hard on this area)</p>
 </div>
 <div class="section" id="linking-mapping-database-functions">
-<h3>“Linking / mapping / database functions”:<a class="headerlink" href="#linking-mapping-database-functions" title="Permalink to this headline">¶</a></h3>
+<h3>4. “Linking / mapping / database functions”:<a class="headerlink" href="#linking-mapping-database-functions" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>MAP protocol for linking all kinds of different protocols together (powerful)</p></li>
-<li><p>A.N.N.E. protocol by Mr Scatmann - <a class="reference external" href="https://medium.com/&#64;bsmith12251960/a-n-n-e-the-alpha-testing-begins-545f809c6129">https://medium.com/&#64;bsmith12251960/a-n-n-e-the-alpha-testing-begins-545f809c6129</a></p></li>
+<li><p>(maybe) A.N.N.E. protocol by Mr Scatmann - <a class="reference external" href="https://medium.com/&#64;bsmith12251960/a-n-n-e-the-alpha-testing-begins-545f809c6129">https://medium.com/&#64;bsmith12251960/a-n-n-e-the-alpha-testing-begins-545f809c6129</a></p></li>
 </ul>
 </div>
 </div>
 <div class="section" id="installation">
 <h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
-<p>Polyglot <em>will be</em> distributed on <cite>PyPI</cite> as a universal wheel and is available on Linux/macOS
-and Windows and supports Python 3.5+. <code class="docutils literal notranslate"><span class="pre">pip</span></code> &gt;= 8.1.2 is required.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ pip install polyglot <span class="c1"># pip3 if pip is Python 2 on your system.</span>
-</pre></div>
-</div>
-<p>In the meantime - you can simply clone the repository and run:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ python setup.py install
+<p>Polyglot is distributed on <cite>PyPI</cite> as a universal wheel and is available on Linux/macOS
+and Windows and supports Python 3.6+. <code class="docutils literal notranslate"><span class="pre">pip</span></code> &gt;= 8.1.2 is required.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ pip install polyglot-bitcoin <span class="c1"># pip3 if pip is Python 2 on your system.</span>
 </pre></div>
 </div>
 </div>
@@ -156,7 +158,7 @@ of best practices.</p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="guide/intro.html">Intro</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="guide/intro.html#polyglot-mission">Polyglot Mission</a></li>
-<li class="toctree-l2"><a class="reference internal" href="guide/intro.html#features-planned">Features (Planned)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guide/intro.html#features">Features</a></li>
 <li class="toctree-l2"><a class="reference internal" href="guide/intro.html#installation">Installation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="guide/intro.html#license">License</a></li>
 <li class="toctree-l2"><a class="reference internal" href="guide/intro.html#credits">Credits</a></li>

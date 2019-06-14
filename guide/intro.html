@@ -86,35 +86,71 @@
 <li><p>A PyQt5 GUI will accompany this library to lower barriers to entry even further to non-technical folk <a class="reference external" href="https://github.com/AustEcon/polyglotGUI">https://github.com/AustEcon/polyglotGUI</a></p></li>
 </ul>
 </div>
-<div class="section" id="features-planned">
-<h2>Features (Planned)<a class="headerlink" href="#features-planned" title="Permalink to this headline">¶</a></h2>
-<ul>
+<div class="section" id="features">
+<h2>Features<a class="headerlink" href="#features" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="currently-working">
+<h3>Currently Working:<a class="headerlink" href="#currently-working" title="Permalink to this headline">¶</a></h3>
+</div>
+<div class="section" id="uploading">
+<h3>1. Uploading<a class="headerlink" href="#uploading" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
 <li><p>B:// (for multimedia up to 100kb) - https://github.com/unwriter/B</p></li>
 <li><p>BCAT:// (for multimedia up to 310mb uncompressed, 110GB with nested gzip) - https://bcat.bico.media/</p></li>
-<li><p>Bottle (<a class="reference external" href="https://bottle.bitdb.network/">https://bottle.bitdb.network/</a>) (native metanet) refs and mainstream urls for:</p>
-<blockquote>
-<div><ul class="simple">
+</ul>
+</div>
+<div class="section" id="utxo-management">
+<h3>2. UTXO management<a class="headerlink" href="#utxo-management" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>Utilities for splitting / selecting UTXOs for a single private key - especially for use in BCAT protocol.</p></li>
+<li><p>Bip32 level UTXO management is also planned</p></li>
+</ul>
+</div>
+<div class="section" id="planned">
+<h3>Planned:<a class="headerlink" href="#planned" title="Permalink to this headline">¶</a></h3>
+</div>
+<div class="section" id="html-reference-converter">
+<h3>1. HTML reference converter<a class="headerlink" href="#html-reference-converter" title="Permalink to this headline">¶</a></h3>
+<p>A Class that will allow for easy conversion of metanet style referencing:</p>
+<ul class="simple">
 <li><p>B:// (ref. by txid)</p></li>
 <li><p>C:// (ref. by sha256 hash of content)</p></li>
 <li><p>D:// (ref. by dynamic state - linked to identity system)</p></li>
 </ul>
-</div></blockquote>
-</li>
-<li><p>AIP (<a class="reference external" href="https://github.com/BitcoinFiles/AUTHOR_IDENTITY_PROTOCOL">https://github.com/BitcoinFiles/AUTHOR_IDENTITY_PROTOCOL</a>)</p></li>
-<li><p>other ID protocols (e.g. Ryan X. Charles of Money Button has been working hard on this area)</p></li>
-<li><p>MAP protocol for linking all kinds of different protocols together (powerful)</p></li>
-<li><p>A.N.N.E. protocol by Mr Scatmann - <a class="reference external" href="https://medium.com/&#64;bsmith12251960/a-n-n-e-the-alpha-testing-begins-545f809c6129">https://medium.com/&#64;bsmith12251960/a-n-n-e-the-alpha-testing-begins-545f809c6129</a></p></li>
+<p>To localhost paths or mainstream internet urls as well as toggling it all back and forth.</p>
+<p>This will allow quick iteration of building a web application on the local machine but also rapid conversion to b://, c:// d:// etc. referencing styles for deployment to the blockchain.</p>
+<p>Would just need a dictionary of {path : B:// reference} pairs for example to be swapped back and forth. Many other features in mind (possibly for another repository).</p>
+</div>
+<div class="section" id="downloading">
+<h3>2. Downloading<a class="headerlink" href="#downloading" title="Permalink to this headline">¶</a></h3>
+<p>Should be able to specify content by:</p>
+<ul class="simple">
+<li><p>B:// (ref. by txid)</p></li>
+<li><p>C:// (ref. by sha256 hash of content)</p></li>
+<li><p>D:// (ref. by dynamic state - linked to identity system)</p></li>
+<li><p>Should work for content uploaded via BCAT</p></li>
 </ul>
+<p>And have it be downloaded.</p>
+<p>If it is a static html page then should optionally allow retreival of all referenced content to reconstruct the entire webpage on the local machine.</p>
+</div>
+<div class="section" id="identity-protocols-money-button-aip-etc">
+<h3>3. Identity protocols (Money Button, AIP etc.):<a class="headerlink" href="#identity-protocols-money-button-aip-etc" title="Permalink to this headline">¶</a></h3>
+<p>I would like to add a very simple interface for interacting with
+- AIP (<a class="reference external" href="https://github.com/BitcoinFiles/AUTHOR_IDENTITY_PROTOCOL">https://github.com/BitcoinFiles/AUTHOR_IDENTITY_PROTOCOL</a>)
+- other ID protocols (e.g. Ryan X. Charles of Money Button has been working hard on this area)</p>
+</div>
+<div class="section" id="linking-mapping-database-functions">
+<h3>4. “Linking / mapping / database functions”:<a class="headerlink" href="#linking-mapping-database-functions" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>MAP protocol for linking all kinds of different protocols together (powerful)</p></li>
+<li><p>(maybe) A.N.N.E. protocol by Mr Scatmann - <a class="reference external" href="https://medium.com/&#64;bsmith12251960/a-n-n-e-the-alpha-testing-begins-545f809c6129">https://medium.com/&#64;bsmith12251960/a-n-n-e-the-alpha-testing-begins-545f809c6129</a></p></li>
+</ul>
+</div>
 </div>
 <div class="section" id="installation">
 <h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
-<p>Polyglot <em>will be</em> distributed on <cite>PyPI</cite> as a universal wheel and is available on Linux/macOS
-and Windows and supports Python 3.5+. <code class="docutils literal notranslate"><span class="pre">pip</span></code> &gt;= 8.1.2 is required.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ pip install polyglot <span class="c1"># pip3 if pip is Python 2 on your system.</span>
-</pre></div>
-</div>
-<p>In the meantime - you can simply clone the repository and run:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ python setup.py install
+<p>Polyglot is distributed on <cite>PyPI</cite> as a universal wheel and is available on Linux/macOS
+and Windows and supports Python 3.6+. <code class="docutils literal notranslate"><span class="pre">pip</span></code> &gt;= 8.1.2 is required.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ pip install polyglot-bitcoin <span class="c1"># pip3 if pip is Python 2 on your system.</span>
 </pre></div>
 </div>
 </div>
@@ -125,7 +161,7 @@ and Windows and supports Python 3.5+. <code class="docutils literal notranslate"
 <div class="section" id="credits">
 <h2>Credits<a class="headerlink" href="#credits" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li><p>CoinGeek for putting on an amazing hackathon from which this project was born!</p></li>
+<li><p>CoinGeek / nChain / Bitcoin Association for putting on an amazing hackathon from which this project was born!</p></li>
 </ul>
 </div>
 <div class="section" id="donate">
@@ -194,7 +230,17 @@ and Windows and supports Python 3.5+. <code class="docutils literal notranslate"
   <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Intro</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#polyglot-mission">Polyglot Mission</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#features-planned">Features (Planned)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#features">Features</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#currently-working">Currently Working:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#uploading">1. Uploading</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#utxo-management">2. UTXO management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#planned">Planned:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#html-reference-converter">1. HTML reference converter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#downloading">2. Downloading</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#identity-protocols-money-button-aip-etc">3. Identity protocols (Money Button, AIP etc.):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#linking-mapping-database-functions">4. “Linking / mapping / database functions”:</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#installation">Installation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#license">License</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#credits">Credits</a></li>
