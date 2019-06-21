@@ -5,6 +5,7 @@ __pycache__
 /.cache
 /.idea
 /polyglot/.idea
+/polyglot_bitcoin.egg-info
 /.coverage
 /.pytest_cache
 /polyglot.egg-info

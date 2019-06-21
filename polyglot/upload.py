@@ -51,6 +51,10 @@ class Upload(bitsv.PrivateKey):
     """
     A simple interface to a multitude of bitcoin protocols
     """
+    def __init__(self, wif=None):
+        super().__init__(wif=wif)
+
+        self.bix3 = bitsv.network.services.BitIndex3(api_key=None, network='main')
 
     # UTILITIES
     @staticmethod
@@ -96,9 +100,8 @@ class Upload(bitsv.PrivateKey):
     def get_encoding_for_file_name(self, file):
         return self.get_encoding_type_for_extension(self.get_file_ext(file))
 
-    @staticmethod
-    def send_rawtx(rawtx):
-        return bitsv.network.services.BitIndex.broadcast_rawtx(rawtx)
+    def send_rawtx(self, rawtx):
+        return self.bix3.send_transaction(rawtx)['txid']
 
     @staticmethod
     def send_lst_of_rawtxs(lst_of_tx):
