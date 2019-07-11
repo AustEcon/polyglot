@@ -1,0 +1,14 @@
+#!/usr/bin/env python3
+
+import argparse
+
+import polyglot
+
+parser = argparse.ArgumentParser(description='Upload a file to Bitcoin SV.')
+parser.add_argument('wif', help='private key')
+parser.add_argument('file', help='filename')
+args = parser.parse_args()
+
+uploader = polyglot.Upload(args.wif)
+txid = uploader.upload_easy(args.file)
+print(txid)
