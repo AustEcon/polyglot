@@ -27,6 +27,7 @@ MEDIA_TYPE = {
     'html': 'text/html',
     'css': 'text/css',
     'js': 'text/javascript',
+    'pdf': 'application/pdf',
 
     # Audio
     'mp3': 'audio/mp3',
@@ -41,6 +42,7 @@ ENCODINGS = {
     'html': 'utf-8',
     'css': 'utf-8',
     'js': 'utf-8',
+    'pdf': 'binary',
 
     # Audio
     'mp3': 'binary',
