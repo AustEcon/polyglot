@@ -24,6 +24,7 @@ MEDIA_TYPE = {
     'jpg': 'image/jpeg',
 
     # Documents
+    'txt': 'text/plain',
     'html': 'text/html',
     'css': 'text/css',
     'js': 'text/javascript',
@@ -39,6 +40,7 @@ ENCODINGS = {
     'jpg': 'binary',
 
     # Documents
+    'txt': 'utf-8',
     'html': 'utf-8',
     'css': 'utf-8',
     'js': 'utf-8',
