@@ -55,10 +55,9 @@ class Upload(bitsv.PrivateKey):
     """
     A simple interface to a multitude of bitcoin protocols
     """
-    def __init__(self, wif=None):
+    def __init__(self, wif=None, network='main'):
         super().__init__(wif=wif)
-
-        self.bix3 = bitsv.network.services.BitIndex3(api_key=None, network='main')
+        self.woc = bitsv.network.services.WhatsonchainNormalised(api_key=None, network=network)
 
     # UTILITIES
     @staticmethod
@@ -105,15 +104,7 @@ class Upload(bitsv.PrivateKey):
         return self.get_encoding_type_for_extension(self.get_file_ext(file))
 
     def send_rawtx(self, rawtx):
-        return self.bix3.send_transaction(rawtx)['txid']
-
-    @staticmethod
-    def send_lst_of_rawtxs(lst_of_tx):
-        """Takes in list of rawtxs - returns txids of sent transactions if successful"""
-        txs = []
-        for tx in lst_of_tx:
-            txs.append(bitsv.network.services.BitIndex.broadcast_rawtx(tx))
-        return txs
+        return self.woc.send_transaction(rawtx)
 
     @staticmethod
     def calculate_txid(rawtx):
