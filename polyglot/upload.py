@@ -56,7 +56,7 @@ class Upload(bitsv.PrivateKey):
     A simple interface to a multitude of bitcoin protocols
     """
     def __init__(self, wif=None, network='main'):
-        super().__init__(wif=wif)
+        super().__init__(wif=wif, network=network)
         self.woc = bitsv.network.services.WhatsonchainNormalised(api_key=None, network=network)
 
     # UTILITIES
