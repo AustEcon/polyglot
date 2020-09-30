@@ -86,7 +86,7 @@ class Upload(bitsv.PrivateKey):
 
     @staticmethod
     def get_file_ext(file):
-        ext = file.split(r".")[1].strip(r"'")
+        ext = file.split(r".")[-1].strip(r"'")
         return ext
 
     @staticmethod
