@@ -13,39 +13,6 @@ SPACE_AVAILABLE_PER_TX_BCAT_PART = MAX_DATA_CARRIER_SIZE - \
     len(BCATPART.encode('utf-8')) - 10000  # temporary hack (-) 10,000 bytes
 
 
-MEDIA_TYPE = {
-    # Images
-    'png': 'image/png',
-    'jpg': 'image/jpeg',
-
-    # Documents
-    'txt': 'text/plain',
-    'html': 'text/html',
-    'css': 'text/css',
-    'js': 'text/javascript',
-    'pdf': 'application/pdf',
-
-    # Audio
-    'mp3': 'audio/mp3',
-}
-
-ENCODINGS = {
-    # Images
-    'png': 'binary',
-    'jpg': 'binary',
-
-    # Documents
-    'txt': 'utf-8',
-    'html': 'utf-8',
-    'css': 'utf-8',
-    'js': 'utf-8',
-    'pdf': 'binary',
-
-    # Audio
-    'mp3': 'binary',
-}
-
-
 class Upload(bitsv.PrivateKey):
     """
     A simple interface to a multitude of bitcoin protocols
@@ -83,19 +50,13 @@ class Upload(bitsv.PrivateKey):
             ext = ext[1:]
         return ext
 
-    @staticmethod
-    def get_media_type_for_extension(ext):
-        return MEDIA_TYPE[str(ext)]
-
-    @staticmethod
-    def get_encoding_type_for_extension(ext):
-        return ENCODINGS[str(ext)]
-
     def get_media_type_for_file_name(self, file):
-        return self.get_media_type_for_extension(self.get_file_ext(file))
+        import magic
+        return magic.from_file(file, mime=True)
 
     def get_encoding_for_file_name(self, file):
-        return self.get_encoding_type_for_extension(self.get_file_ext(file))
+        import magic
+        return magic.Magic(mime_encoding=True).from_file(file)
 
     def send_rawtx(self, rawtx):
         return self.woc.send_transaction(rawtx)
