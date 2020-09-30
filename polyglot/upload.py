@@ -140,19 +140,37 @@ class Upload(bitsv.PrivateKey):
         raise ValueError(
             'Error: It is likely that the utxo has an amount that is too little or you have no utxos for this key')
 
-    def get_split_outputs(self, utxo):
-        """(crudely) splits a utxo into 0.001 amounts with some remainder for fees"""
-        num_splits = utxo.amount // 100000 - 1
+    def get_nonbcatpart_utxos(self):
+        lst = []
+        utxos = self.get_unspents()
+        for utxo in utxos:
+            if utxo.amount != 100000:
+                lst.append(utxo)
+        return lst
+
+    def get_split_outputs(self, utxos):
+        """(crudely) splits utxos into 0.001 amounts with some remainder for fees"""
+        sum = 0
+        for utxo in utxos:
+            sum += utxo.amount
+        num_splits = sum // 100000 - 1
         my_addr = self.address
         outputs = []
         for i in range(num_splits):
             outputs.append((my_addr, 0.001, 'bsv'))
         return outputs
 
+    def combine_and_split_utxos(self, utxos):
+        outputs = self.get_split_outputs(utxos)
+        return self.send(outputs, unspents=utxos)
+
     def split_biggest_utxo(self):
         biggest_unspent = self.get_largest_utxo()
-        outputs = self.get_split_outputs(biggest_unspent)
-        return self.send(outputs, unspents=[biggest_unspent], combine=False)
+        return self.combine_and_split_utxos([biggest_unspent])
+
+    def split_all_utxos(self):
+        lst = self.get_nonbcatpart_utxos()
+        return self.combine_and_split_utxos(lst)
 
     # B
 
