@@ -273,6 +273,21 @@ class Upload(bitsv.PrivateKey):
                                                 utxos=utxos[-1:])
         return txid
 
+    def confirmations(self, txids):
+        """return an array of the number of confirmations the passed pending txids have
+	todo: use bitsv to support checking any transactions"""
+        dct = {}
+        utxos = self.get_unspents()
+        for utxo in utxos:
+            dct[utxo.txid] = utxo.confirmations
+        lst = []
+        for txid in txids:
+            if txid not in dct:
+                lst.append(None)
+            else:
+                lst.append(dct[txid])
+        return lst
+
     def upload_easy(self, file):
         """Convenience function to upload any file to the blockchain.
         Picks BCAT:// or B:// depending on filesize.
