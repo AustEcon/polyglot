@@ -223,7 +223,8 @@ class Upload(bitsv.PrivateKey):
             pass
         else:
             raise ValueError("insufficient 'Fresh' unspent transaction outputs (utxos) to complete the "
-                             "BCAT upload. Please generate more 'Fresh' utxos and try again")
+                             "BCAT upload (" + str(len(utxos)) + " < " + str(number_bcat_parts) + "). "
+                             "Please generate more 'Fresh' utxos and try again")
 
         for i in range(number_bcat_parts):
             data = stream.read(SPACE_AVAILABLE_PER_TX_BCAT_PART)
