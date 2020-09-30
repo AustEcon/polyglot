@@ -56,7 +56,7 @@ Please note: For BCAT protocol, it is very important to have an adequate number 
 
 3. Basic Utilities
 
-Some basic utilities are included for working with utxo splitting and manually extracting the media type / handling of the file based on the file path (with extension) - to cover some potentially more advanced useage patterns of the B and BCAT protocols.
+Some basic utilities are included for working with utxo splitting and extracting the media type / handling of the file based on the file path (with extension and content) - to cover some potentially more advanced useage patterns of the B and BCAT protocols.
 
 .. code-block:: python
 
