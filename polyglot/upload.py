@@ -289,7 +289,7 @@ class Upload(bitsv.PrivateKey):
                                                    flags=flags, utxos=utxos[-1:])
         return self.send_rawtx(rawtx)
 
-    def upload_bcat(self, file, media_type=None, encoding=None, file_name=None, utxos=None):
+    def upload_bcat(self, file, media_type=None, encoding=None, file_name=None, utxos=None, txids=None):
         """broadcasts bcat parts and then bcat linker tx. Returns txid of linker.
         Extracts defaults for the media_type, encoding and filename from the file path
         Alternatively these parameters can be overridden as required"""
@@ -301,7 +301,8 @@ class Upload(bitsv.PrivateKey):
             file_name = self.get_filename(file)
         if utxos is None:
             utxos = self.filter_utxos_for_bcat()
-        txids = self.bcat_parts_send_from_file(file, utxos)
+        if txids is None:
+            txids = self.bcat_parts_send_from_file(file, utxos)
         txid = self.bcat_linker_send_from_txids(lst_of_txids=txids,
                                                 media_type=media_type,
                                                 file_name=file_name,
