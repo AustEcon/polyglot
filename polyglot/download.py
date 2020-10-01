@@ -115,7 +115,10 @@ class Download(NetworkAPI):
             data = self.pushdata_from_script(script)
             newfields = self.b_fields_from_pushdata(data)
             if len(fields):
-                fields['extra'].extend(newfields)
+                if 'extra' not in fields:
+                    fields['extra'] = newfields
+                else:
+                    fields['extra'].extend(newfields)
             elif len(newfields):
                 fields = newfields
         return fields
@@ -124,7 +127,7 @@ class Download(NetworkAPI):
         fields = self.b_fields_from_txid(txid)
         if not len(fields):
             raise ValueError('b tx not found')
-        binary_to_file(fields['data'], file)
+        self.binary_to_file(fields['data'], file)
 
     # alias
     download_b = b_file_from_txid
