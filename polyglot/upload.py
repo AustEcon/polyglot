@@ -147,7 +147,7 @@ class Upload(bitsv.PrivateKey):
         sum = 0
         for utxo in utxos:
             sum += utxo.amount
-        num_splits = sum // (self.fee * MAX_DATA_CARRIER_SIZE) - 1
+        num_splits = int(sum // (self.fee * MAX_DATA_CARRIER_SIZE)) - 1
         my_addr = self.address
         outputs = []
         for i in range(num_splits):
