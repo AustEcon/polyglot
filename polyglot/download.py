@@ -30,6 +30,13 @@ class Download(NetworkAPI):
         return lst
 
     @staticmethod
+    def binary_to_bsv_string(binary):
+        string = binary.decode('utf-8')
+        if string in ('\0','\t','\n','\x0B','\r',' ',''):
+            string = None
+        return string
+
+    @staticmethod
     def pushdata_from_script(script):
         script = Download.hex_to_binary(script)
         offset = 0
@@ -95,12 +102,19 @@ class Download(NetworkAPI):
         fields['data'] = data[offset + 1]
         fields['mediatype'] = data[offset + 2].decode('utf-8')
         if len(data) > offset + 3:
-            fields['encoding'] = data[offset + 3].decode('utf-8')
+            fields['encoding'] = self.binary_to_bsv_string(data[offset + 3].decode('utf-8'))
         if len(data) > offset + 4:
-            fields['filename'] = data[offset + 4].decode('utf-8')
+            fields['name'] = self.binary_to_bsv_string(data[offset + 4].decode('utf-8'))
         if len(data) > offset + 5:
             fields['extra'] = data[offset + 5:]
         return fields
+
+    def b_binary_from_pushdata(self, data):
+        fields = self.b_fields_from_pushdata
+        if len(fields):
+            return fields['data']
+        else:
+            return None
 
     def b_fields_from_txid(self, txid):
         fields = {}
@@ -118,12 +132,97 @@ class Download(NetworkAPI):
 
     def b_file_from_txid(self, txid, file):
         fields = self.b_fields_from_txid(txid)
-        if not len(fields):
+        if not fields:
             raise ValueError('b tx not found')
         self.binary_to_file(fields['data'], file)
+        return fields
 
     # alias
     download_b = b_file_from_txid
 
     # BCAT
-        # todo
+    
+    def bcat_part_detect_from_pushdata(self, data):
+        return len(data) >= 2 and (data[0].decode('utf-8') == BCATPART or data[1].decode('utf-8') == BCATPART)
+
+    def bcat_part_detect_fromtxid(self, txid):
+        for script in self.scripts_from_txid(txid):
+            data = self.pushdata_from_script(script)
+            if self.bcat_part_detect_from_pushdata(data):
+                return True
+        return False
+   
+    def bcat_part_binary_from_pushdata(self, data):
+        if not self.bcat_part_detect_from_pushdata(data):
+            return self.b_binary_from_pushdata(data)
+        offset = 0
+        if len(data[0]) == 0:
+            offset = 1
+        return b''.join(data[offset:]))))
+
+    def bcat_part_binary_from_txid(self, txid):
+        binary = b''
+        for script in self.scripts_from_txid(txid):
+            data = self.pushdata_from_script(script)
+            newbinary = self.bcat_part_binary_from_pushdata(data)
+            if newbinary is not None:
+                binary += newbinary
+        return binary
+
+    def bcat_linker_detect_from_pushdata(self, data):
+        return len(data) >= 8 and (data[0].decode('utf-8') == BCAT or data[1].decode('utf-8') == BCAT)
+
+    def bcat_linker_detect_from_txid(self, txid):
+        for script in self.scripts_from_txid(txid):
+            data = self.pushdata_from_script(script)
+            if self.bcat_linker_detect_from_pushdata(data):
+                return True
+        return False
+
+    def bcat_linker_fields_from_pushdata(self, data):
+        fields = {}
+        if not self.bcat_linker_detect_from_pushdata(data):
+            return fields
+        offset = 0
+        if len(data[0]) == 0:
+            offset = 1
+        fields['info'] = self.binary_to_bsv_string(data[offset + 1])
+        fields['mediatype'] = self.binary_to_bsv_string(data[offset + 2])
+        fields['encoding'] = self.binary_to_bsv_string(data[offset + 3])
+        fields['name'] = self.binary_to_bsv_string(data[offset + 4])
+        fields['flag'] = self.binary_to_bsv_string(data[offset + 5])
+        parts = []
+        for link in data[offset + 6:]:
+            parts.append(link.hex())
+        fields['parts'] = parts
+
+        return fields
+
+    def bcat_linker_fields_from_txid(self, txid):
+        fields = {}
+        for script in self.scripts_from_txid(txid):
+            data = self.pushdata_from_script(script)
+            fields = self.bcat_linker_fields_from_pushdata(data)
+            if fields:
+                break
+        return fields
+
+    def bcat_fields_from_txid(self, txid):
+        fields = self.bcat_linker_fields_from_txid(txid)
+        if not fields:
+            return fields
+        data = bytes()
+        for txid in fields['parts']:
+            data += self.bcat_part_binary_from_txid(txid)
+        fields['data'] = data
+        return fields
+
+    def download_bcat(self, txid, file):
+        fields = self.bcat_linker_fields_from_txid(txid)
+        if not fields:
+            raise ValueError('bcat tx not found')
+        with open(file, 'wb') as f:
+            for txid in fields['parts']:
+                f.write(self.bcat_part_binary_from_txid(txid))
+        return fields
+
