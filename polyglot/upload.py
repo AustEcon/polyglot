@@ -144,7 +144,7 @@ class Upload(bitsv.PrivateKey):
 
     def get_split_outputs(self, utxo):
         """(crudely) splits a utxo into 0.001 amounts with some remainder for fees"""
-        num_splits = utxo.amount // (self.fee * 100000) - 1
+        num_splits = int(utxo.amount / (self.fee * 100000)) - 1
         my_addr = self.address
         outputs = []
         for i in range(num_splits):
