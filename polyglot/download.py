@@ -34,6 +34,7 @@ class Download(NetworkAPI):
         tx = self.get_transaction(txid)
         for output in tx.outputs:
             lst.append(output.scriptpubkey)
+        return lst
 
     @staticmethod
     def pushdata_from_script(script):
