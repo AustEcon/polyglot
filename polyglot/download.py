@@ -1,3 +1,5 @@
+import gzip
+
 from bitsv.network import NetworkAPI
 
 from .bitcom import B, C, BCAT, BCATPART, D, AIP, MAP
@@ -154,7 +156,11 @@ class Download(NetworkAPI):
    
     def bcat_part_binary_from_pushdata(self, data):
         if not self.bcat_part_detect_from_pushdata(data):
-            return self.b_binary_from_pushdata(data)
+            subfields = self.bcat_linker_fields_from_pushdata(data)
+            if subfields:
+                return self.bcat_binary_from_txids(subfields['parts'])
+            else:
+                return self.b_binary_from_pushdata(data)
         offset = 0
         if len(data[0]) == 0:
             offset = 1
@@ -207,22 +213,38 @@ class Download(NetworkAPI):
                 break
         return fields
 
-    def bcat_fields_from_txid(self, txid):
+    def bcat_binary_from_txids(self, txids):
+        data = bytes()
+        for txid in txids:
+            data += self.bcat_part_binary_from_txid(txid)
+        return data
+
+    def bcat_fields_from_txid(self, txid, gunzip = True):
         fields = self.bcat_linker_fields_from_txid(txid)
         if not fields:
             return fields
-        data = bytes()
-        for txid in fields['parts']:
-            data += self.bcat_part_binary_from_txid(txid)
-        fields['data'] = data
+        fields['data'] = self.bcat_binary_from_txids(fields['parts'])
+        if gunzip and fields['flag'] in ('gzip', 'nested-gzip'):
+            # change 'flag' to reflect that we mutated the data
+            fields['flag'] = fields['flag'].replace('zip','unzipped')
+            # unzip
+            fields['data'] = gzip.decompress(fields['data'])
         return fields
 
-    def download_bcat(self, txid, file):
+    def download_bcat(self, txid, file, gunzip = True):
         fields = self.bcat_linker_fields_from_txid(txid)
         if not fields:
             raise ValueError('bcat tx not found')
+        if gunzip and fields['flag'] in ('gzip', 'nested-gzip'):
+            # change 'flag' to reflect that we mutated the data
+            fields['flag'] = fields['flag'].replace('zip','unzipped')
+        else:
+            gunzip = False
         with open(file, 'wb') as f:
             for txid in fields['parts']:
-                f.write(self.bcat_part_binary_from_txid(txid))
+                data = self.bcat_part_binary_from_txid(txid)
+                if gunzip:
+                    data = gzip.decompress(data)
+                f.write(data)
         return fields
 
