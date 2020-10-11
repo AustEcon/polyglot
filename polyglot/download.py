@@ -11,11 +11,12 @@ class Download(NetworkAPI):
     # UTILITIES
     @staticmethod
     def binary_to_file(binary, file):
-        """Give the pathname to a png, jpg, gif, tiff, bmp
-        writes binary to it
+        """Give the pathname to a file
+        makes needed subdirectories and writes binary to it
 
         Example path (for newer users): "C://Users/username/Pictures/my_picture.jpg etc."
         """
+        os.makedirs(os.path.dirname(file), exist_ok=True)
         with open(file, 'wb') as f:
             f.write(binary)
 
