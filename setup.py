@@ -43,8 +43,7 @@ setup(
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: Implementation :: CPython',
     ],
-
-    install_requires=['bitsv', 'requests', 'pathlib'],
+    install_requires=['bitsv', 'requests', 'pathlib', 'python-magic'],
     extras_require={
         'cli': ('appdirs', 'click', 'privy', 'tinydb'),
         'cache': ('lmdb', ),
