@@ -18,9 +18,11 @@ setup(
     url='https://github.com/AustEcon/polyglot',
     download_url='https://github.com/AustEcon/polyglot/tarball/{}'.format(version),
     license='MIT',
-
-    scripts=['bin/polyglot-upload'],
-
+    entry_points={
+        'console_scripts': [
+            'polyglot-cli=polyglot.__main__:main'
+        ]
+    },
     keywords=[
         'polyglot',
         'metanet',

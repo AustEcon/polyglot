@@ -88,7 +88,9 @@ Easy upload is also available as a command-line script:
 
 .. code-block:: shell
 
-    $ polyglot-upload wif-key filename #--> txid
+    $ polyglot-cli filename --testnet
+    Enter private key in wif format:
+    da5a1c7d4a36bfd175a67038234b6159e3c219b1eb409503324677ea89244e7c
 
 
 Features
