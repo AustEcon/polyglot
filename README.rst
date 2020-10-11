@@ -47,7 +47,7 @@ This works for a wide range of media types.
 
 .. code-block:: python
 
-    >>> file = "C:/Users/username/Pictures/BSV_banner.jpg""
+    >>> file = "C:/Users/username/Pictures/BSV_banner.jpg"
     >>> uploader.upload_bcat(file)
 
 See image here: https://bico.media/be8b6a79e66934d3419265fbf3295d03e331a4c08098ae7f817a7592ffaedd2b
@@ -74,6 +74,23 @@ But additionally:
     >>> get_file_ext(file) #--> .ext
     >>> calculate_txid(rawtx) #--> txid
 
+4. Easy Upload
+
+You can also let polyglot pick whether to use the bcat or b:// protocol based on filesize, and handle utxo splitting automatically:
+
+.. code-block:: python
+
+    >>> uploader.upload_easy(path) #--> txid
+
+5. Command-line Script
+
+Easy upload is also available as a command-line script:
+
+.. code-block:: shell
+
+    $ polyglot-cli filename --testnet
+    Enter private key in wif format:
+    da5a1c7d4a36bfd175a67038234b6159e3c219b1eb409503324677ea89244e7c
 
 
 Features
