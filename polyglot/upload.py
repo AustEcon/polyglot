@@ -1,5 +1,6 @@
 import os
 from io import BytesIO
+from pathlib import Path
 import bitsv
 from bitsv import op_return
 from bitsv import crypto
@@ -77,16 +78,13 @@ class Upload(bitsv.PrivateKey):
 
     @staticmethod
     def get_filename(path):
-        if "\\" in path:
-            lst = path.split(os.sep)
-            return lst[len(lst) - 1]
-        else:
-            lst = path.split("/")
-            return lst[len(lst) - 1]
+        return Path(path).name
 
     @staticmethod
     def get_file_ext(file):
-        ext = file.split(r".")[1].strip(r"'")
+        ext = Path(file).suffix
+        if ext and ext[0] == '.':
+            ext = ext[1:]
         return ext
 
     @staticmethod
