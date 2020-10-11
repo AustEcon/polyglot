@@ -8,7 +8,9 @@ from bitsv import utils
 from .bitcom import B, C, BCAT, BCATPART, D, AIP, MAP
 
 # Temp hack to allow space for funding inputs (10,000 bytes allocated)
-SPACE_AVAILABLE_PER_TX_BCAT_PART = 100000 - len(BCATPART.encode('utf-8')) - 10000  # temporary hack (-) 10,000 bytes
+MAX_DATA_CARRIER_SIZE = 100_000  # bytes
+SPACE_AVAILABLE_PER_TX_BCAT_PART = MAX_DATA_CARRIER_SIZE - \
+    len(BCATPART.encode('utf-8')) - 10000  # temporary hack (-) 10,000 bytes
 
 
 MEDIA_TYPE = {
@@ -48,9 +50,11 @@ class Upload(bitsv.PrivateKey):
     """
     A simple interface to a multitude of bitcoin protocols
     """
-    def __init__(self, wif=None, network='main'):
+    def __init__(self, wif=None, network='main', fee=1, utxo_min_confirmations=1):
         super().__init__(wif=wif, network=network)
         self.woc = bitsv.network.services.WhatsonchainNormalised(api_key=None, network=network)
+        self.fee = fee
+        self.utxo_min_confirmations = utxo_min_confirmations
 
     # UTILITIES
     @staticmethod
@@ -112,7 +116,7 @@ class Upload(bitsv.PrivateKey):
         """filters out all utxos with 0 conf or too low amount for use in a BCAT part transaction"""
         filtered_utxos = []
         for utxo in self.get_unspents():
-            if utxo.confirmations != 0 and utxo.amount >= 100000:
+            if utxo.confirmations >= self.utxo_min_confirmations and utxo.amount >= self.fee * MAX_DATA_CARRIER_SIZE:
                 filtered_utxos.append(utxo)
         return filtered_utxos
 
@@ -134,7 +138,7 @@ class Upload(bitsv.PrivateKey):
         lst = []
         utxos = self.get_unspents()
         for utxo in utxos:
-            if utxo.amount != 100000:
+            if utxo.amount != MAX_DATA_CARRIER_SIZE:
                 lst.append(utxo)
         return lst
 
@@ -143,16 +147,16 @@ class Upload(bitsv.PrivateKey):
         sum = 0
         for utxo in utxos:
             sum += utxo.amount
-        num_splits = sum // 100000 - 1
+        num_splits = int(sum // (self.fee * MAX_DATA_CARRIER_SIZE)) - 1
         my_addr = self.address
         outputs = []
         for i in range(num_splits):
-            outputs.append((my_addr, 0.001, 'bsv'))
+            outputs.append((my_addr, self.fee * 0.001, 'bsv'))
         return outputs
 
     def combine_and_split_utxos(self, utxos):
         outputs = self.get_split_outputs(utxos)
-        return self.send(outputs, unspents=utxos)
+        return self.send(outputs, unspents=utxos, fee=self.fee)
 
     def split_biggest_utxo(self):
         biggest_unspent = self.get_largest_utxo()
@@ -174,7 +178,8 @@ class Upload(bitsv.PrivateKey):
                            (encoding, "utf-8"),  # Optional if no filename
                            (file_name, "utf-8")]  # Optional
         lst_of_pushdata = op_return.create_pushdata(lst_of_pushdata)
-        return self.create_transaction(outputs=[], message=lst_of_pushdata, combine=False, custom_pushdata=True, unspents=self.filter_utxos_for_bcat())
+        return self.create_transaction(outputs=[], message=lst_of_pushdata, combine=False,
+            custom_pushdata=True, unspents=self.filter_utxos_for_bcat(), fee=self.fee)
 
     def b_create_rawtx_from_file(self, file, media_type=None, encoding=None, file_name=None):
         # FIXME - add checks
@@ -243,7 +248,7 @@ class Upload(bitsv.PrivateKey):
             # bitsv sorts utxos by amount and then selects first the ones of *lowest* amount
             # so here we will manually select "Fresh" utxos (with 100,000 satoshis, 1 conf) one at a time
             fresh_utxo = utxos[i:i+1]
-            txid = self.send(outputs=[], message=lst_of_pushdata, fee=1, combine=False,
+            txid = self.send(outputs=[], message=lst_of_pushdata, fee=self.fee, combine=False,
                              custom_pushdata=True, unspents=fresh_utxo)
             txs.append(txid)
         return txs
@@ -272,7 +277,7 @@ class Upload(bitsv.PrivateKey):
 
         lst_of_pushdata.extend([(tx, 'hex') for tx in lst_of_txids])
         lst_of_pushdata = op_return.create_pushdata(lst_of_pushdata)
-        return self.create_transaction(outputs=[], message=lst_of_pushdata, combine=False, custom_pushdata=True, unspents=utxos[-1:])
+        return self.create_transaction(outputs=[], message=lst_of_pushdata, combine=False, custom_pushdata=True, unspents=utxos[-1:], fee=self.fee)
 
     def bcat_linker_send_from_txids(self, lst_of_txids, media_type, encoding, file_name=' ', info=' ', flags=' ', utxos=None):
         """Creates and sends bcat transaction to link up "bcat parts" (with the stored data).
@@ -284,7 +289,7 @@ class Upload(bitsv.PrivateKey):
                                                    flags=flags, utxos=utxos[-1:])
         return self.send_rawtx(rawtx)
 
-    def upload_bcat(self, file, media_type=None, encoding=None, file_name=None):
+    def upload_bcat(self, file, media_type=None, encoding=None, file_name=None, utxos=None, txids=None):
         """broadcasts bcat parts and then bcat linker tx. Returns txid of linker.
         Extracts defaults for the media_type, encoding and filename from the file path
         Alternatively these parameters can be overridden as required"""
@@ -294,8 +299,10 @@ class Upload(bitsv.PrivateKey):
             encoding = self.get_encoding_for_file_name(file)
         if file_name is None:
             file_name = self.get_filename(file)
-        utxos = self.filter_utxos_for_bcat()
-        txids = self.bcat_parts_send_from_file(file, utxos)
+        if utxos is None:
+            utxos = self.filter_utxos_for_bcat()
+        if txids is None:
+            txids = self.bcat_parts_send_from_file(file, utxos)
         txid = self.bcat_linker_send_from_txids(lst_of_txids=txids,
                                                 media_type=media_type,
                                                 file_name=file_name,
