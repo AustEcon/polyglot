@@ -313,27 +313,29 @@ class Upload(bitsv.PrivateKey):
         return txid
 
     def upload_easy(self, file):
-        """Convenience function to upload any file to the blockchain.  Picks BCAT:// or B:// depending on filesize.
-        Extracts the media_type, encoding and filename from the file path.
-
-	Returns txid of result."""
+        """Convenience function to upload any file to the blockchain.
+        Picks BCAT:// or B:// depending on filesize.
+        Extracts the media_type, encoding and filename from the file path. Returns txid of
+        result."""
         size = os.path.getsize(file)
         num_bcat_parts = self.get_number_bcat_parts(size)
-        if sum([utxo.amount//100000 for utxo in self.get_unspents()]) < num_bcat_parts:
+        if sum([utxo.amount//MAX_DATA_CARRIER_SIZE for utxo in self.get_unspents()]) < num_bcat_parts:
             if (self.balance < size + 200000):
-                raise ValueError("Not enough funds: send " + str(size + 200000 - self.balance) + " to " + self.address)
+                raise ValueError("Not enough funds: send " + str(size + 200000 - self.balance) +
+                                 " to " + self.address)
             else:
                 # coins need consolidation
                 self.send([])
-        if sum([utxo.amount//100000 for utxo in self.filter_utxos_for_bcat()]) < num_bcat_parts:
+        if sum([utxo.amount//MAX_DATA_CARRIER_SIZE for
+                utxo in self.filter_utxos_for_bcat()]) < num_bcat_parts:
             # funds present but not ready
-            while self.get_largest_utxo().amount >= 200000:
-                self.split_biggest_utxo()
+            self.split_all_utxos()
             print("Funds present but waiting network confirmation ...", file=sys.stderr)
-            while sum([utxo.amount//100000 for utxo in self.filter_utxos_for_bcat()]) < num_bcat_parts:
+            while sum([utxo.amount//MAX_DATA_CARRIER_SIZE for
+                       utxo in self.filter_utxos_for_bcat()]) < num_bcat_parts:
                 time.sleep(60)
             print("Got network confirmation", file=sys.stderr)
-        if size < 100000:
+        if size < MAX_DATA_CARRIER_SIZE:
             return self.upload_b(file)
         else:
             return self.upload_bcat(file)
