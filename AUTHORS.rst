@@ -2,11 +2,12 @@ Polyglot is powered by BitSV
 
 Maintainers
 -----------
-
 - AustEcon
+
 
 Contributors
 ------------
+- Xloem [https://github.com/xloem]
 
 Special mention to:
 

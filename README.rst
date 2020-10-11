@@ -148,7 +148,3 @@ and Windows and supports Python 3.6+. ``pip`` >= 8.1.2 is required.
 Credits
 -------
 - CoinGeek / nChain / Bitcoin Association for putting on an amazing hackathon from which this project was born!
-
-Donate
---------
-- Made by $AustEcon (Handcash handle)
